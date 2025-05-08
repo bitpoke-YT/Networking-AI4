@@ -1,0 +1,23 @@
+Must have
+- Create Task
+- Change Task prority
+- Compleate Task
+
+Nice to have
+- Web Front End
+- Reminders
+- Email when task complate
+- User login and acounts
+
+Shooting for the moon
+- Task asigning to users
+
+Softwear
+- Flask (Front end)
+- SQLlite (Backend and storage)
+- Python
+
+Task
+- Front end
+- SQL database
+- Classes for Tasks
