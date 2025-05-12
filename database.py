@@ -16,6 +16,20 @@ class database():
             DueDate INTEGER
         )''')
 
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS User (
+            UserID INTEGER PRIMARY KEY,
+            UserName TEXT
+        )''')
+
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS TaskUser (
+            TaskID INTEGER PRIMARY KEY,
+            UserID INTEGER PRIMARY KEY,
+        )''')
+
+
+
         self.server.commit()
 
     def __init__(self):
@@ -27,3 +41,6 @@ class database():
             self.__setupTable()
         except Exception as e:
             print(f"Could Not Connect to server This is the Issue {e}")
+
+    def getTasks(self, userID):
+        ...
