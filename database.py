@@ -6,7 +6,17 @@ class database():
     def __setupTable(self):
         if self.server == None:
             raise "Server Not Setup Yet"
-            return
+        cursor = self.server.cursor()
+
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Tasks (
+            TaskID INTEGER PRIMARY KEY,
+            Title TEXT,
+            Description TEXT,
+            DueDate INTEGER
+        )''')
+
+        self.server.commit()
 
     def __init__(self):
         path = os.path.expanduser('-/Documents/Task_Management')
