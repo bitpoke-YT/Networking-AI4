@@ -57,5 +57,6 @@ class database():
         tasks = []
         for taskID in TaskDB:
             tasks.append(self.getTask(taskID[0]))
+        return tasks
 
 
