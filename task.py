@@ -1,9 +1,13 @@
 class Task:
-    compleated = False
-    def __init__(self, title, description, due_date):
+    __compleated = False
+    def __init__(self, title, description, due_date, compleated):
         self.title = title
         self.description = description
         self.due_date = due_date
+        self.__compleated = compleated
+
+    def compleate(self):
+        __compleated = False
 
 class TaskList:
     _instance = None
