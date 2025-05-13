@@ -15,9 +15,25 @@ class TaskList:
         else:
             return cls._instance
     
+    def add_task(self, task):
+        try:
+            self.__tasks.append(task)
+        except Exception as e:
+            print(e)
+
     def deleteTask(self, task):
         try:
             self.__tasks.remove(task)
             return True
         except:
             return False
+    
+    def print_list(self):
+        print(self.__tasks)
+
+def placeholder():
+    # Create task list
+    tasklist = TaskList()
+
+    # Test Methods
+    TaskList().print_list()
