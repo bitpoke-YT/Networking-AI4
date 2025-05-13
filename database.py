@@ -58,5 +58,10 @@ class database():
         for taskID in TaskDB:
             tasks.append(self.getTask(taskID[0]))
         return tasks
+    
+    def AddTasks(self, tasks, userID):
+        cursor = self.__server.cursor()
+        # for task in tasks:
+        #     cursor.execute(f"INSERT INTO Tasks")
 
 
