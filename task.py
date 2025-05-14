@@ -12,7 +12,7 @@ class Task:
         __completed = False
 
     def databaseTuple(self):
-        return (self.title, self.description, self.due_date.timestamp(), int(self.__compleated))
+        return (self.title, self.description, self.due_date.timestamp(), int(self.__completed))
 
 class TaskList:
     _instance = None
