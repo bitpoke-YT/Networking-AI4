@@ -1,4 +1,5 @@
 import datetime
+import database
 
 class Task:
     __completed = False
@@ -45,3 +46,15 @@ def placeholder():
 
     # Test Methods
     TaskList().print_list()
+
+def createUsersList(userID, isCompleated):
+    tasks = []
+    server = database.database()
+    if(isCompleated == True):
+        tasks = server.getCompleatedTasks(userID)
+    elif(isCompleated == False):
+        tasks = server.getCurrentTasks(userID)
+    else:
+        tasks = server.getAllTasks(userID)
+
+    

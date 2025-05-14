@@ -85,6 +85,6 @@ class database():
         TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
         tasks = []
         for taskID in TaskDB:
-            # Getting No
+            # Getting Non compleated 
             tasks.append(self.getTask(taskID[0], 0))
         return tasks
