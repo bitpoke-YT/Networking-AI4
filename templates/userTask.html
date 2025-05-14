@@ -29,7 +29,19 @@
         </div>
     </div>
 
+    <div id="CreateTask" class="fixed inset-0 z-10 w-screen overflow-y-auto ">
+        
+    </div>
+
     <script>
+        function closeCreate() {
+            const CreateTaskMenu = document.getElementById('CreateTask');
+            CreateTaskMenu.classList.add('hidden');
+        }
+        function openCreate() {
+            const CreateTaskMenu = document.getElementById('CreateTask');
+            CreateTaskMenu.classList.remove('hidden');
+        }
         function completeTask(title) {
             // Send a request to the server to complete the task
             // This will depend on your Flask implementation

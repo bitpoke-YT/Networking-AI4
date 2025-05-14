@@ -1,5 +1,6 @@
 # This is where the Flask front end will go
 import task
+from flask import *
 
 # # <<<<<<< HEAD
 # print("Welcome to the Task Management Tool.\n")
@@ -44,8 +45,6 @@ def tasks():
         ID = request.form.get("userId")
         taskList = task.createUsersList(ID, False)
         return render_template("userTask.html", tasks = taskList.getTasks())
-
-
     
     return redirect(url_for('mainPage'))
 
