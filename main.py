@@ -2,7 +2,20 @@
 import task
 from flask import Flask, render_template
 
-print("Welcome to the Task Management Tool.\n")
+while True:
+    print("Press 1 to create a task.")
+    print("Press 2 to delete a task.")
+    print("Press 3 to list tasks.")
+    print("Press 4 to exit.")
+
+    try:
+        choice = int(input("Choose an option: "))
+    except:
+        print("Invalid input!")
+
+
+    t = task.TaskList()
+
     if (choice == 1):
         task_title = input("Task Title: ")
         task_desc = input("Task Description: ")
