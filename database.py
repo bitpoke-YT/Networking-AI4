@@ -60,9 +60,13 @@ class database():
         return tasks
     
     def AddTasks(self, tasks, userID):
-        params = ()
         cursor = self.__server.cursor()
         for task in tasks:
-            cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)")
+            params = task.databaseTuple()
+            cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
+            ID = cursor.lastrowid
+            cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
+        
+        self.__server.commit()
 
 
