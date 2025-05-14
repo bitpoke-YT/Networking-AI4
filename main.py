@@ -1,6 +1,5 @@
 # This is where the Flask front end will go
 import task
-from flask import *
 
 # # <<<<<<< HEAD
 # print("Welcome to the Task Management Tool.\n")
