@@ -40,7 +40,7 @@ class TaskList:
         print(self.__tasks)
 
     def getTasks(self):
-        return __tasks
+        return self.__tasks
 
 def placeholder():
     # Create task list
