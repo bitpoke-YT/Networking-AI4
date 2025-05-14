@@ -1,6 +1,7 @@
 import sqlite3
 import os 
-from task import Task 
+# from task import Task 
+import task
 
 class database():
     __server = None

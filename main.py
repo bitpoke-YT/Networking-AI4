@@ -1,8 +1,7 @@
 # This is where the Flask front end will go
 import task
-from flask import *
+from flask import Flask, render_template
 
-<<<<<<< HEAD
 print("Welcome to the Task Management Tool.\n")
 
 while True:
@@ -20,11 +19,10 @@ while True:
     t = task.TaskList()
 
     if (choice == 1):
-        n = input("Enter task name to add: ")
-        t.add_task(n)
-        t.add_task(task.Task(input("Task Title: "),
-                             input("Task Description: "),
-                             input("Task_due_date: ")))
+        task_title = input("Task Title: ")
+        task_desc = input("Task Description: ")
+        task_date = input("Task due date (DD/MM/YYYY): ").split("/")
+        t.add_task(task.Task(task_title, task_desc, task_date))
     elif (choice == 2):
         n = input("Enter task name to delete: ")
         t.delete_task(n)
@@ -32,6 +30,8 @@ while True:
         t.print_list()
     elif (choice == 4):
         exit()
+
+    print()
 
 app = Flask(__name__)
 
