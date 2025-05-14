@@ -1,3 +1,5 @@
+import datatime
+
 class Task:
     __compleated = False
     def __init__(self, title, description, due_date, compleated):
@@ -8,6 +10,9 @@ class Task:
 
     def compleate(self):
         __compleated = False
+
+    def databaseTuple(self):
+        return (self.title, self.description, self.due_date)
 
 class TaskList:
     _instance = None
