@@ -1,4 +1,4 @@
-import datetime
+import datatime
 
 class Task:
     __completed = False
@@ -35,12 +35,6 @@ class TaskList:
             return True
         except:
             return False
-        
-    def edit_task(self, task, newtask):
-        try:
-            self.__tasks[int(task)] = newtask
-        except Exception as e:
-            print(e)
     
     def print_list(self):
         print(self.__tasks)
