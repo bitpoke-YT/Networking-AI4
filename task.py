@@ -56,3 +56,11 @@ def createUsersList(userID, isCompleated):
         tasks = server.getCurrentTasks(userID)
     else:
         tasks = server.getAllTasks(userID)
+    
+    taskList = TaskList()
+
+    for task in tasks:
+        taskList.add_task(task)
+
+    return taskList
+        

@@ -2,7 +2,7 @@
 import task
 from flask import *
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 print("Welcome to the Task Management Tool.\n")
 
 while True:
@@ -43,8 +43,9 @@ def mainPage():
 def tasks():
     if request.method == "POST":
         ID = request.form.get("userId")
-        print(ID)
-        # Auth = request.form.get("Auth")
+        taskList = task.createUsersList(ID, False)
+        
+
     
     return redirect(url_for('mainPage'))
 
