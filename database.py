@@ -57,6 +57,15 @@ class database():
         
         self.__server.commit()
 
+    def addTask(self, task, userID):
+        cursor = self.__server.cursor()
+        params = task.databaseTuple()
+        cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
+        ID = cursor.lastrowid
+        cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
+        
+        self.__server.commit()
+
 
     # Get Tasks
 

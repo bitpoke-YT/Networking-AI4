@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import database
 
 class Task:
@@ -6,7 +6,16 @@ class Task:
     def __init__(self, title, description, due_date):
         self.title = title
         self.description = description
-        self.due_date = due_date
+        if (type(due_date) == type(datetime)):
+            print("Good")
+            self.due_date = due_date
+        elif (type(due_date) == type(int)):
+            self.due_date = datetime.fromtimestamp(due_date)
+        elif (type(due_date == type(str))):
+            print(int(due_date))
+            self.due_date = datetime.utcfromtimestamp(float(due_date))
+        else:
+            raise TypeError("Input must be int, string or datetime")
         
 
     def complete(self):

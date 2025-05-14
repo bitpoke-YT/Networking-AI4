@@ -66,8 +66,8 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" onclick="createTask()" class="w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto">Create</button>
-                        <button type="button" type="create" class="w-full justify-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 sm:ml-3 sm:w-auto">Close</button>
+                        <button type="submit" class="w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto">Create</button>
+                        <button type="button" onclick="closeCreate()" class="w-full justify-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 sm:ml-3 sm:w-auto">Close</button>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
             e.preventDefault();
             const title = document.getElementById("title").value;
             const description = document.getElementById("description").value;
-            const dueDate = document.getElementById("duedate").value;
+            var dueDate = new Date(document.getElementById("duedate").value);
 
             fetch('/tasks', {
                 method: 'PUT',
@@ -89,12 +89,13 @@
                 body: JSON.stringify({
                     title: title,
                     description: description,
-                    dueDate: dueDate
+                    dueDate: dueDate.getTime(),
+                    id: {{  userid  }},
                 })
             })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
         });
         function closeCreate() {
             const CreateTaskMenu = document.getElementById('CreateTask');
