@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="container mx-auto p-4 mt-6">
+        <h1 class="text-3xl font-bold mb-4">Task List</h1>
+        <ul>
+            <!-- Loop through each task in the list -->
+            {% for task in tasks %}
+            <li class="bg-gray-100 p-4 mb-2 rounded">
+                <h2 class="text-xl font-bold">{{ task.title }}</h2>
+                <p class="text-gray-600">{{ task.description }}</p>
+                <p class="text-gray-600">Due Date: {{ task.due_date }}</p>
+                {% if task.__completed %}
+                <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Completed</span>
+                {% else %}
+                <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>
+                {% endif %}
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('{{ task.title }}')">Complete</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function completeTask(title) {
+            // Send a request to the server to complete the task
+            // This will depend on your Flask implementation
+            console.log(`Completing task: ${title}`);
+        }
+    </script>
+</body>
+</html>

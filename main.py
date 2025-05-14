@@ -44,7 +44,8 @@ def tasks():
     if request.method == "POST":
         ID = request.form.get("userId")
         taskList = task.createUsersList(ID, False)
-        
+        return render_template("userTask.html", tasks = rentaskList.getTasks())
+
 
     
     return redirect(url_for('mainPage'))

@@ -39,6 +39,9 @@ class TaskList:
     def print_list(self):
         print(self.__tasks)
 
+    def getTasks(self):
+        return __tasks
+
 def placeholder():
     # Create task list
     tasklist = TaskList()
