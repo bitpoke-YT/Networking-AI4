@@ -29,53 +29,73 @@
         </div>
     </div>
 
-    <div id="CreateTask" class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border-4 border-solid">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
-                            Title
-                        </label>
-                        <input type="text" 
-                               id="title" 
-                               name="title" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                               required>
+    <form>
+        <div id="CreateTask" class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border-4 border-solid">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                                Title
+                            </label>
+                            <input type="text" 
+                                   id="title" 
+                                   name="title" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                                Description
+                            </label>
+                            <input type="text" 
+                                   id="description" 
+                                   name="description" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="duedate">
+                                Due date
+                            </label>
+                            <input type="date" 
+                                id="duedate" 
+                                name="duedate" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                required>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                            Description
-                        </label>
-                        <input type="text" 
-                               id="description" 
-                               name="description" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                               required>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" onclick="createTask()" class="w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto">Create</button>
+                        <button type="button" type="create" class="w-full justify-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 sm:ml-3 sm:w-auto">Close</button>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="duedate">
-                            Due date
-                        </label>
-                        <input type="date" 
-                            id="duedate" 
-                            name="duedate" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                            required>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" onclick="createTask()" class="w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 sm:ml-3 sm:w-auto">Create</button>
-                    <button type="button" onclick="closeCreate()" class="w-full justify-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-500 sm:ml-3 sm:w-auto">Close</button>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 
     <script>
-        function createTask(){
-            closeCreate()
-        }
+        document.querySelector('form').addEventListener('submit', function(e){
+            e.preventDefault();
+            const title = document.getElementById("title").value;
+            const description = document.getElementById("description").value;
+            const dueDate = document.getElementById("duedate").value;
+
+            fetch('/tasks', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    dueDate: dueDate
+                })
+            })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+        });
         function closeCreate() {
             const CreateTaskMenu = document.getElementById('CreateTask');
             CreateTaskMenu.classList.add('hidden');
