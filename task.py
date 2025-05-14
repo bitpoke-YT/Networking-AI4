@@ -20,9 +20,8 @@ class TaskList:
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(TaskList, cls).__new__(cls)
-        else:
-            return cls._instance
+            cls._instance = super(TaskList, cls).__new__(cls)   
+        return cls._instance
     
     def add_task(self, task):
         try:
@@ -30,7 +29,7 @@ class TaskList:
         except Exception as e:
             print(e)
 
-    def deleteTask(self, task):
+    def delete_task(self, task):
         try:
             self.__tasks.remove(task)
             return True
