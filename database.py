@@ -1,6 +1,7 @@
 import sqlite3
 import os 
-from task import Task 
+import task
+import datetime
 
 class database():
     __server = None
@@ -27,8 +28,8 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS TaskUser (
-            TaskID INTEGER PRIMARY KEY,
             UserID INTEGER PRIMARY KEY,
+            TaskID INTEGER
         )''')
 
 
@@ -36,7 +37,7 @@ class database():
         self.__server.commit()
 
     def __init__(self):
-        path = os.path.expanduser('-/Documents/Task_Management')
+        path = os.path.expanduser('~/Documents/Task_Management')
         if not os.path.exists(path):
             os.makedirs(path)
         try:
@@ -45,21 +46,8 @@ class database():
         except Exception as e:
             print(f"Could Not Connect to server This is the Issue {e}")
 
-    def getTask(self, taskID):
-        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}'")
-        taskClass = None
-        for taskDB in tasksDB:
-            taskClass = Task(taskDB[1], taskDB[2], taskDB[3], (taskDB[4] <= 1))
-        return taskClass
 
-    def getTasks(self, userID):
-        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
-        tasks = []
-        for taskID in TaskDB:
-            tasks.append(self.getTask(taskID[0]))
-        return tasks
-    
-    def AddTasks(self, tasks, userID):
+    def addTasks(self, tasks, userID):
         cursor = self.__server.cursor()
         for task in tasks:
             params = task.databaseTuple()
@@ -70,3 +58,35 @@ class database():
         self.__server.commit()
 
 
+    # Get Tasks
+
+    # Completed is a Int
+    def getTask(self, taskID, completed):
+        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' Compleated = '{completed}'")
+        taskClass = None
+        for taskDB in tasksDB:
+            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), (taskDB[4] <= 1))
+        return taskClass
+
+    def getCompleatedTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            tasks.append(self.getTask(taskID[0], 1))
+        return tasks
+    
+    def getCurrentTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            # Getting Non compleated 
+            tasks.append(self.getTask(taskID[0], 0))
+        return tasks
+
+    def getAllTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            tasks.append(self.getTask(taskID[0], 1))
+            tasks.append(self.getTask(taskID[0], 0))
+        return tasks
