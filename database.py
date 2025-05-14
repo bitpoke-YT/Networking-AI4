@@ -45,24 +45,46 @@ class database():
         except Exception as e:
             print(f"Could Not Connect to server This is the Issue {e}")
 
-    def getTask(self, taskID):
-        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}'")
+
+    def addTasks(self, tasks, userID):
+        cursor = self.__server.cursor()
+        for task in tasks:
+            params = task.databaseTuple()
+            cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
+            ID = cursor.lastrowid
+            cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
+        
+        self.__server.commit()
+
+    def getAllTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            tasks.append(self.getTask(taskID[0], 1))
+            tasks.append(self.getTask(taskID[0], 0))
+        return tasks
+
+    # Get Tasks
+
+    # Completed is a Int
+    def getTask(self, taskID, completed):
+        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' Compleated = '{completed}'")
         taskClass = None
         for taskDB in tasksDB:
             taskClass = Task(taskDB[1], taskDB[2], taskDB[3], (taskDB[4] <= 1))
         return taskClass
 
-    def getTasks(self, userID):
+    def getCompleatedTasks(self, userID):
         TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
         tasks = []
         for taskID in TaskDB:
-            tasks.append(self.getTask(taskID[0]))
+            tasks.append(self.getTask(taskID[0], 1))
         return tasks
     
-    def AddTasks(self, tasks, userID):
-        params = ()
-        cursor = self.__server.cursor()
-        for task in tasks:
-            cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)")
-
-
+    def getCurrentTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            # Getting Non compleated 
+            tasks.append(self.getTask(taskID[0], 0))
+        return tasks

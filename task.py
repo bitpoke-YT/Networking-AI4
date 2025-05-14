@@ -1,9 +1,18 @@
+import datetime
+import database
+
 class Task:
-    completed = False
+    __completed = False
     def __init__(self, title, description, due_date):
         self.title = title
         self.description = description
         self.due_date = due_date
+
+    def complete(self):
+        __completed = False
+
+    def databaseTuple(self):
+        return (self.title, self.description, self.due_date.timestamp(), int(self.__completed))
 
 class TaskList:
     _instance = None
@@ -29,3 +38,21 @@ class TaskList:
     
     def print_list(self):
         print(self.__tasks)
+
+def placeholder():
+    # Create task list
+    tasklist = TaskList()
+
+    # Test Methods
+    print("Task List: ", end="")
+    TaskList().print_list()
+
+def createUsersList(userID, isCompleated):
+    tasks = []
+    server = database.database()
+    if(isCompleated == True):
+        tasks = server.getCompleatedTasks(userID)
+    elif(isCompleated == False):
+        tasks = server.getCurrentTasks(userID)
+    else:
+        tasks = server.getAllTasks(userID)

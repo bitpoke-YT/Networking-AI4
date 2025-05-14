@@ -1,6 +1,8 @@
 # This is where the Flask front end will go
 import task
+from flask import *
 
+<<<<<<< HEAD
 print("Welcome to the Task Management Tool.\n")
 
 while True:
@@ -30,3 +32,21 @@ while True:
         t.print_list()
     elif (choice == 4):
         exit()
+
+app = Flask(__name__)
+
+@app.route("/")
+def mainPage():
+    return render_template("home.html")
+
+@app.route("/tasks", methods=["GET", "POST"])
+def tasks():
+    if request.method == "POST":
+        ID = request.form.get("userId")
+        print(ID)
+        # Auth = request.form.get("Auth")
+    
+    return redirect(url_for('mainPage'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
