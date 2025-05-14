@@ -40,6 +40,9 @@ class TaskList:
     def print_list(self):
         print(self.__tasks)
 
+    def getTasks(self):
+        return self.__tasks
+
 def placeholder():
     # Create task list
     tasklist = TaskList()
@@ -57,3 +60,11 @@ def createUsersList(userID, isCompleated):
         tasks = server.getCurrentTasks(userID)
     else:
         tasks = server.getAllTasks(userID)
+    
+    taskList = TaskList()
+
+    for task in tasks:
+        taskList.add_task(task)
+
+    return taskList
+        

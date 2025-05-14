@@ -3,21 +3,6 @@ import task
 from flask import Flask, render_template
 
 print("Welcome to the Task Management Tool.\n")
-
-while True:
-    print("Press 1 to create a task.")
-    print("Press 2 to delete a task.")
-    print("Press 3 to list tasks.")
-    print("Press 4 to exit.")
-
-    try:
-        choice = int(input("Choose an option: "))
-    except:
-        print("Invalid input!")
-
-
-    t = task.TaskList()
-
     if (choice == 1):
         task_title = input("Task Title: ")
         task_desc = input("Task Description: ")
@@ -43,8 +28,8 @@ def mainPage():
 def tasks():
     if request.method == "POST":
         ID = request.form.get("userId")
-        print(ID)
-        # Auth = request.form.get("Auth")
+        taskList = task.createUsersList(ID, False)
+        return render_template("userTask.html", tasks = taskList.getTasks())
     
     return redirect(url_for('mainPage'))
 

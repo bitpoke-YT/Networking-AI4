@@ -17,14 +17,14 @@
         </div>
     </form>
 
-    <script>
-        document.querySelector('form').addEventListene('submit', function(e){
-            const id = document.getElementById("userId").value;
-            if(id == null || id < 0){
-                alert('Please fill in all required fields');
-                e.preventDefault();
-            }
-        });
-    </script>
 </body>
+<script>
+    document.querySelector('form').addEventListene('submit', function(e){
+        const id = document.getElementById("userId").value;
+        if(id == null || id < 0){
+            alert('Please fill in all required fields');
+            e.preventDefault();
+        }
+    });
+</script>
 </html>

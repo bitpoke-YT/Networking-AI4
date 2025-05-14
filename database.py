@@ -1,7 +1,7 @@
 import sqlite3
 import os 
-# from task import Task 
 import task
+import datetime
 
 class database():
     __server = None
@@ -28,8 +28,8 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS TaskUser (
-            TaskID INTEGER PRIMARY KEY,
             UserID INTEGER PRIMARY KEY,
+            TaskID INTEGER
         )''')
 
 
@@ -37,7 +37,7 @@ class database():
         self.__server.commit()
 
     def __init__(self):
-        path = os.path.expanduser('-/Documents/Task_Management')
+        path = os.path.expanduser('~/Documents/Task_Management')
         if not os.path.exists(path):
             os.makedirs(path)
         try:
@@ -57,13 +57,6 @@ class database():
         
         self.__server.commit()
 
-    def getAllTasks(self, userID):
-        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
-        tasks = []
-        for taskID in TaskDB:
-            tasks.append(self.getTask(taskID[0], 1))
-            tasks.append(self.getTask(taskID[0], 0))
-        return tasks
 
     # Get Tasks
 
@@ -72,7 +65,7 @@ class database():
         tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' Compleated = '{completed}'")
         taskClass = None
         for taskDB in tasksDB:
-            taskClass = Task(taskDB[1], taskDB[2], taskDB[3], (taskDB[4] <= 1))
+            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), (taskDB[4] <= 1))
         return taskClass
 
     def getCompleatedTasks(self, userID):
@@ -87,5 +80,13 @@ class database():
         tasks = []
         for taskID in TaskDB:
             # Getting Non compleated 
+            tasks.append(self.getTask(taskID[0], 0))
+        return tasks
+
+    def getAllTasks(self, userID):
+        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasks = []
+        for taskID in TaskDB:
+            tasks.append(self.getTask(taskID[0], 1))
             tasks.append(self.getTask(taskID[0], 0))
         return tasks
