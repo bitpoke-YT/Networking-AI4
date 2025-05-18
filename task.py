@@ -8,14 +8,12 @@ class Task:
         self.title = title
         self.description = description
         if (type(due_date) == type(datetime.now())):
-            print("Good")
             self.due_date = due_date
         elif (type(due_date) == type(int(1))):
             self.due_date = datetime.fromtimestamp(due_date/100)
         elif (type(due_date) == type(float(1))):
             self.due_date = datetime.fromtimestamp(int(due_date)/100)
         elif (type(due_date) == type(str(1))):
-            print(float(due_date))
             self.due_date = datetime.fromtimestamp(float(due_date)/100)
         else:
             print(type(due_date))
@@ -43,7 +41,7 @@ class TaskList:
     def add_task(self, task):
         try:
             server = database.database()
-            taskid = server.addTask(task, self._user_task_id)
+            taskid = server.addTask(task, self.__userid)
             return taskid
         except Exception as e:
             print(e)

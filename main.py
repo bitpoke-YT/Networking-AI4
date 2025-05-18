@@ -1,29 +1,88 @@
-# This is where the Flask front end will go
 import task
 from flask import *
-# Temp before set up in task
 import database
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
 
+# Read secret key from .env file
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+secret_key = None
+if os.path.exists(env_path):
+    with open(env_path, 'r') as f:
+        for line in f:
+            if line.startswith('FLASK_SECRET_KEY='):
+                secret_key = line.strip().split('=', 1)[1]
+                break
+if not secret_key:
+    raise RuntimeError(".env file missing FLASK_SECRET_KEY or file not found")
+app.secret_key = secret_key
+
+@app.before_request
+def before_request():
+    database.database()
+
 @app.route("/")
 def mainPage():
+    if 'userid' in session:
+        return redirect(url_for('tasks'))
     return render_template("home.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if not username or not password:
+            return render_template("register.html", error="Please fill in all fields.")
+        db = database.database()
+        # Check if user exists
+        user = db.getUserByUsername(username)
+        if user:
+            return render_template("register.html", error="Username already exists.")
+        # Register user
+        hashed_pw = generate_password_hash(password)
+        userid = db.createUser(username, hashed_pw)
+        session['userid'] = userid
+        session['username'] = username
+        return redirect(url_for('tasks'))
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        db = database.database()
+        user = db.getUserByUsername(username)
+        if user and check_password_hash(user['password'], password):
+            session['userid'] = user['userid']
+            session['username'] = username
+            return redirect(url_for('tasks'))
+        return render_template("login.html", error="Invalid credentials.")
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('mainPage'))
 
 @app.route("/tasks", methods=["GET", "POST", "PUT"])
 def tasks():
+    if 'userid' not in session:
+        return redirect(url_for('login'))
+    userid = session['userid']
     if request.method == "GET":
-        # AJAX fetch for completed/current tasks
         completed = request.args.get("completed")
-        userid = request.args.get("userid")
-        if completed is not None and userid is not None:
+        # Use session userid if not provided
+        if completed is not None:
             completed = completed.lower() == "true"
             taskList = task.TaskList(userid)
             if completed:
                 tasks_data = taskList.getCompleatedTasks()
             else:
                 tasks_data = taskList.getTasks()
-            # Convert tasks to dicts for JSON
             tasks_json = []
             for t in tasks_data:
                 tasks_json.append({
@@ -35,52 +94,52 @@ def tasks():
                 })
             return jsonify({'tasks': tasks_json})
 
-    if request.method == "POST":
-        ID = request.form.get("userId")
-        taskList = task.TaskList(ID)
-        context = {'tasks':taskList.getTasks(), 'userid':ID}
-        print(context['tasks'])
+        # Render page with tasks
+        taskList = task.TaskList(userid)
+        context = {'tasks': taskList.getTasks(), 'userid': userid}
         return render_template("userTask.html", **context)
+
+    if request.method == "POST":
+        # Only used for form POST from home.html (legacy)
+        ID = request.form.get("userId")
+        if not ID:
+            return redirect(url_for('mainPage'))
+        session['userid'] = ID
+        taskList = task.TaskList(ID)
+        context = {'tasks': taskList.getTasks(), 'userid': ID}
+        return render_template("userTask.html", **context)
+
     if request.method == "PUT":
-        # try:
-            data = request.get_json()
-            if data is None:
-                return jsonify({'message': 'Invalid request body'}), 400
-
-            title = data.get('title')
-            description = data.get('description')
-            due_date = data.get('dueDate')
-            userid = data.get('id')
-
-            putTask = task.Task(title, description, due_date)
-            taskList = task.TaskList(userid)
-            taskid = taskList.add_task(putTask)
-
-            # Make sure taskid is not None
-            if not taskid:
-                return jsonify({'message': 'Failed to create task', 'taskid': None}), 500
-
-            # Prepare task dict for frontend
-            from datetime import datetime
-            due_date_str = datetime.fromtimestamp(int(due_date)/1000).strftime('%Y-%m-%d')
-            task_dict = {
-                'taskid': taskid,
-                'title': title,
-                'description': description,
-                'due_date': due_date_str,
-                '__completed': False
-            }
-
-            return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
-        
-        # except Exception as e:
-        #     print(e)
-        #     return jsonify({'message': 'An error occurred'}), 500
+        data = request.get_json()
+        if data is None:
+            return jsonify({'message': 'Invalid request body'}), 400
+        title = data.get('title')
+        description = data.get('description')
+        due_date = data.get('dueDate')
+        # Always use session userid
+        userid = session['userid']
+        putTask = task.Task(title, description, due_date)
+        taskList = task.TaskList(userid)
+        taskid = taskList.add_task(putTask)
+        if not taskid:
+            return jsonify({'message': 'Failed to create task', 'taskid': None}), 500
+        from datetime import datetime
+        due_date_str = datetime.fromtimestamp(int(due_date)/1000).strftime('%Y-%m-%d')
+        task_dict = {
+            'taskid': taskid,
+            'title': title,
+            'description': description,
+            'due_date': due_date_str,
+            '__completed': False
+        }
+        return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
 
     return redirect(url_for('mainPage'))
 
 @app.route("/task", methods=["POST"])
 def taskComplete():
+    if 'userid' not in session:
+        return redirect(url_for('login'))
     if request.method == "POST":
         data = request.get_json()
         if data is None:
@@ -88,39 +147,8 @@ def taskComplete():
         taskid = data.get('taskid')
         server = database.database()
         server.completeTask(taskid) 
-
         return jsonify({'message': 'Task completed successfully'}), 200
-
     return redirect(url_for('mainPage'))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# while True:
-#     print("Press 1 to create a task.")
-#     print("Press 2 to delete a task.")
-#     print("Press 3 to list tasks.")
-#     print("Press 4 to exit.")
-
-#     try:
-#         choice = int(input("Choose an option: "))
-#     except:
-#         print("Invalid input!")
-
-
-#     t = task.TaskList()
-
-#     if (choice == 1):
-#         task_title = input("Task Title: ")
-#         task_desc = input("Task Description: ")
-#         task_date = input("Task due date (DD/MM/YYYY): ").split("/")
-#         t.add_task(task.Task(task_title, task_desc, task_date))
-#     elif (choice == 2):
-#         n = input("Enter task name to delete: ")
-#         t.delete_task(n)
-#     elif (choice == 3):
-#         t.print_list()
-#     elif (choice == 4):
-#         exit()
-
-#     print()

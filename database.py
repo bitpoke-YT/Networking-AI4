@@ -24,7 +24,8 @@ class database():
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS User (
             UserID INTEGER PRIMARY KEY,
-            UserName TEXT
+            UserName TEXT UNIQUE,
+            Password TEXT
         )''')
 
         cursor.execute('''
@@ -33,22 +34,20 @@ class database():
             TaskID INTEGER
         )''')
 
-
-
         self.__server.commit()
 
     def __new__(cls):
         if cls._instance is not None:
             return cls._instance
+        
         cls._instance = super(database, cls).__new__(cls)
         path = os.path.expanduser('~/Documents/Task_Management')
         if not os.path.exists(path):
             os.makedirs(path)
         try:
             cls.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
-            cls.__setupTable()
+            cls._instance.__setupTable()
         except Exception as e:
-            print(f"Could Not Connect to server This is the Issue {e}")
             return cls._instance
 
 
@@ -68,7 +67,6 @@ class database():
         cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
         ID = cursor.lastrowid
         cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
-        print("Add DB")
         self.__server.commit()
 
         return ID
@@ -130,3 +128,18 @@ class database():
         cursor.execute("DELETE FROM Tasks WHERE TaskID = ?", (taskID,))
         cursor.execute("DELETE FROM TaskUser WHERE TaskID = ?", (taskID,))
         self.__server.commit()
+
+    # --- User Authentication Methods ---
+    def createUser(self, username, password_hash):
+        cursor = self.__server.cursor()
+        cursor.execute("INSERT INTO User (UserName, Password) VALUES (?, ?)", (username, password_hash))
+        self.__server.commit()
+        return cursor.lastrowid
+
+    def getUserByUsername(self, username):
+        cursor = self.__server.cursor()
+        cursor.execute("SELECT UserID, UserName, Password FROM User WHERE UserName = ?", (username,))
+        row = cursor.fetchone()
+        if row:
+            return {'userid': row[0], 'username': row[1], 'password': row[2]}
+        return None
