@@ -14,8 +14,9 @@ def mainPage():
 def tasks():
     if request.method == "POST":
         ID = request.form.get("userId")
-        taskList = task.createUsersList(ID, False)
-        context = {'task':taskList.getTasks(), 'userid':ID}
+        taskList = task.TaskList(ID)
+        context = {'tasks':taskList.getTasks(), 'userid':ID}
+        print(taskList.getTasks())
         return render_template("userTask.html", **context)
     if request.method == "PUT":
         # try:

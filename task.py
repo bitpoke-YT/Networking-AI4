@@ -2,24 +2,25 @@ from datetime import datetime
 import database
 
 class Task:
-    __completed = False
-    def __init__(self, title, description, due_date):
+    def __init__(self, title, description, due_date, completed=False):
+        self.__completed = completed
         self.title = title
         self.description = description
-        if (type(due_date) == type(datetime)):
+        if (type(due_date) == type(datetime.now())):
             print("Good")
             self.due_date = due_date
         elif (type(due_date) == type(int)):
-            self.due_date = datetime.fromtimestamp(due_date)
-        elif (type(due_date == type(str))):
-            print(int(due_date))
-            self.due_date = datetime.utcfromtimestamp(float(due_date))
+            self.due_date = datetime.fromtimestamp(due_date)/100
+        elif (type(due_date) == type(str)):
+            print(float(due_date))
+            self.due_date = datetime.fromtimestamp(float(due_date))/100
         else:
+            print(type(due_date))
             raise TypeError("Input must be int, string or datetime")
         
 
     def complete(self):
-        __completed = False
+        self.__completed = False
 
     def databaseTuple(self):
         return (self.title, self.description, self.due_date.timestamp(), int(self.__completed))
@@ -28,9 +29,11 @@ class TaskList:
     _instance = None
     __tasks = []
 
-    def __new__(cls):
+    def __new__(cls, userID):
         if cls._instance is None:
             cls._instance = super(TaskList, cls).__new__(cls)
+        if cls.__tasks == []:
+            cls.__tasks = database.database().getCurrentTasks(userID)
         return cls._instance
 
     def add_task(self, task):

@@ -71,7 +71,7 @@ class database():
 
     # Completed is a Int
     def getTask(self, taskID, completed):
-        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' Compleated = '{completed}'")
+        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' AND Compleated ='{int(completed)}'")
         taskClass = None
         for taskDB in tasksDB:
             taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), (taskDB[4] <= 1))
