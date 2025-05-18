@@ -9,11 +9,19 @@
 <body>
     <div class="container mx-auto p-4 mt-6">
         <h1 class="text-3xl font-bold mb-4">Task List</h1>
+        <div class="flex justify-between items-center max-w-4xl mx-auto mt-6 mb-4">
+            <button onclick="window.location.href='/'" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded">
+                &#8592; Back
+            </button>
+            <button onclick="openCreate()" class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded">
+                + Create
+            </button>
+        </div>
         <div class="max-w-4xl mx-auto">
             <ul>
                 <!-- Loop through each task in the list -->
                 {% for task in tasks %}
-                <li class="bg-gray-100 p-4 mb-2 rounded">
+                <li class="bg-gray-100 p-4 mb-2 rounded ring-4 ring-gray-300 hover:ring-gray-200">
                     <h2 class="text-xl font-bold">{{ task.title }}</h2>
                     <p class="text-gray-600">{{ task.description }}</p>
                     <p class="text-gray-600">Due Date: {{ task.due_date }}</p>
@@ -22,15 +30,15 @@
                     {% else %}
                     <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>
                     {% endif %}
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('{{ task.title }}')">Complete</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('{{ task.taskid }}')">Complete</button>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
-
+<!-- Create Menu Popup -->
     <form>
-        <div id="CreateTask" class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div id="CreateTask" class="fixed inset-0 z-10 w-screen overflow-y-auto hidden">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border-4 border-solid">
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -79,7 +87,8 @@
             e.preventDefault();
             const title = document.getElementById("title").value;
             const description = document.getElementById("description").value;
-            var dueDate = new Date(document.getElementById("duedate").value);
+            var dueDateInput = document.getElementById("duedate").value;
+            var dueDate = new Date(dueDateInput);
 
             fetch('/tasks', {
                 method: 'PUT',
@@ -94,7 +103,25 @@
                 })
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                // Add the new task to the DOM
+                const ul = document.querySelector('ul');
+                const li = document.createElement('li');
+                li.className = "bg-gray-100 p-4 mb-2 rounded ring-4 ring-gray-300 hover:ring-gray-200";
+                li.innerHTML = `
+                    <h2 class="text-xl font-bold">${title}</h2>
+                    <p class="text-gray-600">${description}</p>
+                    <p class="text-gray-600">Due Date: ${dueDate}</p>
+                    <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('${data.taskid}')">Complete</button>
+                `;
+                ul.appendChild(li);
+                closeCreate();
+                // Optionally reset form fields
+                document.getElementById("title").value = "";
+                document.getElementById("description").value = "";
+                document.getElementById("duedate").value = "";
+            })
             .catch(error => console.error('Error:', error));
         });
         function closeCreate() {
@@ -105,10 +132,10 @@
             const CreateTaskMenu = document.getElementById('CreateTask');
             CreateTaskMenu.classList.remove('hidden');
         }
-        function completeTask(title) {
+        function completeTask(taskid) {
             // Send a request to the server to complete the task
             // This will depend on your Flask implementation
-            console.log(`Completing task: ${title}`);
+            console.log(`Completing task: ${taskid}`);
         }
     </script>
 </body>

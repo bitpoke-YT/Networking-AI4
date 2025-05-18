@@ -16,7 +16,6 @@ def tasks():
         ID = request.form.get("userId")
         taskList = task.TaskList(ID)
         context = {'tasks':taskList.getTasks(), 'userid':ID}
-        print(taskList.getTasks())
         return render_template("userTask.html", **context)
     if request.method == "PUT":
         # try:
@@ -31,15 +30,27 @@ def tasks():
 
             putTask = task.Task(title, description, due_date)
             server = database.database()
-            server.addTask(putTask, userid)
+            taskid = server.addTask(putTask, userid)
+            # Make sure taskid is not None
+            if not taskid:
+                return jsonify({'message': 'Failed to create task', 'taskid': None}), 500
 
-            # Return a responsetext
-            return jsonify({'message': 'Task created successfully'}), 201
+            # Prepare task dict for frontend
+            from datetime import datetime
+            due_date_str = datetime.fromtimestamp(int(due_date)/1000).strftime('%Y-%m-%d')
+            task_dict = {
+                'taskid': taskid,
+                'title': title,
+                'description': description,
+                'due_date': due_date_str,
+                '__completed': False
+            }
+
+            return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
         # except Exception as e:
         #     print(e)
         #     return jsonify({'message': 'An error occurred'}), 500
 
-    
     return redirect(url_for('mainPage'))
 
 if __name__ == '__main__':

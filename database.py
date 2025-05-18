@@ -28,7 +28,7 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS TaskUser (
-            UserID INTEGER PRIMARY KEY,
+            UserID INTEGER,
             TaskID INTEGER
         )''')
 
@@ -63,8 +63,10 @@ class database():
         cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
         ID = cursor.lastrowid
         cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
-        
+        print("Add DB")
         self.__server.commit()
+
+        return ID
 
 
     # Get Tasks
@@ -74,7 +76,7 @@ class database():
         tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' AND Compleated ='{int(completed)}'")
         taskClass = None
         for taskDB in tasksDB:
-            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), (taskDB[4] <= 1))
+            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), taskID,(taskDB[4] <= 1))
         return taskClass
 
     def getCompleatedTasks(self, userID):
