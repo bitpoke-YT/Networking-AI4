@@ -29,25 +29,29 @@ class Task:
         return (self.title, self.description, self.due_date.timestamp(), int(self.__completed))
 
 class TaskList:
-    _instance = None
-    __tasks = []
+    _instances = {}
+    __database = None
 
     def __new__(cls, userID):
-        if cls._instance is None:
-            cls._instance = super(TaskList, cls).__new__(cls)
-        if cls.__tasks == []:
-            cls.__tasks = database.database().getCurrentTasks(userID)
-        return cls._instance
+        if userID not in cls._instances:
+            cls.__userid = userID
+            instance = super(TaskList, cls).__new__(cls)
+            cls.__database = database.database()
+            cls._instances[userID] = instance
+        return cls._instances[userID]
 
     def add_task(self, task):
         try:
-            self.__tasks.append(task)
+            server = database.database()
+            taskid = server.addTask(task, self._user_task_id)
+            return taskid
         except Exception as e:
             print(e)
+            return None
 
     def deleteTask(self, task):
         try:
-            self.__tasks.remove(task)
+            self.__database.deleteTask(task.taskid)
             return True
         except:
             return False
@@ -61,8 +65,23 @@ class TaskList:
     def print_list(self):
         print(self.__tasks)
 
-    def getTasks(self):
-        return self.__tasks
+    def compleateTask(self, task):
+        try:
+            task.__completed = True
+        except Exception as e:
+            print(e)
+
+    def getTaskId(self, taskID):
+        for task in self.__tasks:
+            if task.taskid == taskID:
+                return task
+        return None
+
+    def getTasks(self,):
+        return self.__database.getCurrentTasks(self.__userid)
+    
+    def getCompleatedTasks(self):
+        return self.__database.getCompleatedTasks(self.__userid)
 
 def placeholder():
     # Create task list
@@ -82,7 +101,7 @@ def createUsersList(userID, isCompleated):
     else:
         tasks = server.getAllTasks(userID)
     
-    taskList = TaskList()
+    taskList = TaskList(userID)
 
     for task in tasks:
         taskList.add_task(task)

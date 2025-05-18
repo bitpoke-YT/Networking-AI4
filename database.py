@@ -5,6 +5,7 @@ import datetime
 
 class database():
     __server = None
+    _instance = None
 
     def __setupTable(self):
         if self.__server == None:
@@ -36,15 +37,19 @@ class database():
 
         self.__server.commit()
 
-    def __init__(self):
+    def __new__(cls):
+        if cls._instance is not None:
+            return cls._instance
+        cls._instance = super(database, cls).__new__(cls)
         path = os.path.expanduser('~/Documents/Task_Management')
         if not os.path.exists(path):
             os.makedirs(path)
         try:
-            self.__server = sqlite3.connect(f"{path}/Task.db")
-            self.__setupTable()
+            cls.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
+            cls.__setupTable()
         except Exception as e:
             print(f"Could Not Connect to server This is the Issue {e}")
+            return cls._instance
 
 
     def addTasks(self, tasks, userID):
@@ -67,23 +72,27 @@ class database():
         self.__server.commit()
 
         return ID
+    
 
 
     # Get Tasks
 
     # Completed is a Int
     def getTask(self, taskID, completed):
-        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' AND Compleated ='{int(completed)}'")
+        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' AND Compleated ={int(completed)}")
         taskClass = None
         for taskDB in tasksDB:
-            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), taskID,(taskDB[4] <= 1))
+            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), taskID,(taskDB[4] >= 1))
         return taskClass
 
     def getCompleatedTasks(self, userID):
         TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
         tasks = []
         for taskID in TaskDB:
-            tasks.append(self.getTask(taskID[0], 1))
+            # Getting Non compleated 
+            task = self.getTask(taskID[0], True)
+            if task != None:
+                tasks.append(task)
         return tasks
     
     def getCurrentTasks(self, userID):
@@ -91,13 +100,33 @@ class database():
         tasks = []
         for taskID in TaskDB:
             # Getting Non compleated 
-            tasks.append(self.getTask(taskID[0], 0))
+            task = self.getTask(taskID[0], False)
+            if task != None:
+                tasks.append(task)
         return tasks
 
     def getAllTasks(self, userID):
         TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
         tasks = []
         for taskID in TaskDB:
-            tasks.append(self.getTask(taskID[0], 1))
-            tasks.append(self.getTask(taskID[0], 0))
+            # Getting Non compleated 
+            task = self.getTask(taskID[0], False)
+            if task != None:
+                tasks.append(task)
+        for taskID in TaskDB:
+            # Getting Non compleated 
+            task = self.getTask(taskID[0], True)
+            if task != None:
+                tasks.append(task)
         return tasks
+
+    def completeTask(self, taskID):
+        cursor = self.__server.cursor()
+        cursor.execute("UPDATE Tasks SET Compleated = 1 WHERE TaskID = ?", (taskID,))
+        self.__server.commit()
+
+    def deleteTask(self, taskID):
+        cursor = self.__server.cursor()
+        cursor.execute("DELETE FROM Tasks WHERE TaskID = ?", (taskID,))
+        cursor.execute("DELETE FROM TaskUser WHERE TaskID = ?", (taskID,))
+        self.__server.commit()

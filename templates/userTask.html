@@ -13,13 +13,22 @@
             <button onclick="window.location.href='/'" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded">
                 &#8592; Back
             </button>
-            <button onclick="openCreate()" class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded">
-                + Create
-            </button>
+            <div class="flex items-center space-x-4">
+                <button onclick="openCreate()" class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded">
+                    + Create
+                </button>
+                <!-- Custom Tailwind Toggle Switch -->
+                <label class="flex items-center cursor-pointer">
+                    <span class="mr-2 text-sm font-semibold text-gray-700">Show Completed</span>
+                    <input type="checkbox" id="toggleCompleted" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-500 transition-colors duration-200 relative">
+                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"></div>
+                    </div>
+                </label>
+            </div>
         </div>
         <div class="max-w-4xl mx-auto">
-            <ul>
-                <!-- Loop through each task in the list -->
+            <ul id="taskList">
                 {% for task in tasks %}
                 <li class="bg-gray-100 p-4 mb-2 rounded ring-4 ring-gray-300 hover:ring-gray-200">
                     <h2 class="text-xl font-bold">{{ task.title }}</h2>
@@ -30,7 +39,9 @@
                     {% else %}
                     <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>
                     {% endif %}
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('{{ task.taskid }}')">Complete</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask(event, '{{ task.taskid }}')" {% if task.__completed %}disabled class="bg-gray-400 cursor-not-allowed"{% endif %}>
+                        {% if task.__completed %}Completed{% else %}Complete{% endif %}
+                    </button>
                 </li>
                 {% endfor %}
             </ul>
@@ -105,7 +116,7 @@
             .then(response => response.json())
             .then(data => {
                 // Add the new task to the DOM
-                const ul = document.querySelector('ul');
+                const ul = document.getElementById('taskList');
                 const li = document.createElement('li');
                 li.className = "bg-gray-100 p-4 mb-2 rounded ring-4 ring-gray-300 hover:ring-gray-200";
                 li.innerHTML = `
@@ -113,7 +124,7 @@
                     <p class="text-gray-600">${description}</p>
                     <p class="text-gray-600">Due Date: ${dueDate}</p>
                     <span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask('${data.taskid}')">Complete</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="completeTask(event, '${data.taskid}')">Complete</button>
                 `;
                 ul.appendChild(li);
                 closeCreate();
@@ -132,11 +143,70 @@
             const CreateTaskMenu = document.getElementById('CreateTask');
             CreateTaskMenu.classList.remove('hidden');
         }
-        function completeTask(taskid) {
-            // Send a request to the server to complete the task
-            // This will depend on your Flask implementation
-            console.log(`Completing task: ${taskid}`);
+        function completeTask(event, taskid) {
+            fetch('/task', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    taskid: taskid
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Find the button and update the UI to show as completed
+                const button = event.target;
+                const li = button.closest('li');
+                // Remove the "Not Completed" badge if present
+                const notCompletedBadge = li.querySelector('.bg-red-100');
+                if (notCompletedBadge) {
+                    notCompletedBadge.remove();
+                }
+                // Add the "Completed" badge
+                const completedBadge = document.createElement('span');
+                completedBadge.className = "bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded";
+                completedBadge.textContent = "Completed";
+                li.insertBefore(completedBadge, button);
+                // Optionally disable the button
+                button.disabled = true;
+                button.textContent = "Completed";
+                button.classList.remove('bg-blue-500', 'hover:bg-blue-700');
+                button.classList.add('bg-gray-400', 'cursor-not-allowed');
+            })
+            .catch(error => console.error('Error:', error));
         }
+
+        // Toggle completed tasks
+        document.getElementById('toggleCompleted').addEventListener('change', function() {
+            const showCompleted = this.checked;
+            const userid = {{ userid }};
+            fetch(`/tasks?completed=${showCompleted}&userid=${userid}`)
+                .then(response => response.json())
+                .then(data => {
+                    const ul = document.getElementById('taskList');
+                    ul.innerHTML = '';
+                    data.tasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.className = "bg-gray-100 p-4 mb-2 rounded ring-4 ring-gray-300 hover:ring-gray-200";
+                        li.innerHTML = `
+                            <h2 class="text-xl font-bold">${task.title}</h2>
+                            <p class="text-gray-600">${task.description}</p>
+                            <p class="text-gray-600">Due Date: ${task.due_date}</p>
+                            ${task.__completed
+                                ? `<span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Completed</span>`
+                                : `<span class="bg-red-100 text-red-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Not Completed</span>`
+                            }
+                            <button class="${task.__completed ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'} text-white font-bold py-2 px-4 rounded"
+                                onclick="completeTask(event, '${task.taskid}')"
+                                ${task.__completed ? 'disabled' : ''}>
+                                ${task.__completed ? 'Completed' : 'Complete'}
+                            </button>
+                        `;
+                        ul.appendChild(li);
+                    });
+                });
+        });
     </script>
 </body>
 </html>
