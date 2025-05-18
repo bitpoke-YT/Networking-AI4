@@ -151,4 +151,4 @@ def taskComplete():
     return redirect(url_for('mainPage'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host=1000, port=5000)
