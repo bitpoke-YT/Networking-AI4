@@ -73,6 +73,7 @@ def tasks():
     if 'userid' not in session:
         return redirect(url_for('login'))
     userid = session['userid']
+    print(f"The user id is {userid}")
     if request.method == "GET":
         completed = request.args.get("completed")
         # Use session userid if not provided
