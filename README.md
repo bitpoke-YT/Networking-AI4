@@ -48,7 +48,7 @@ Should be unbreakable if you don't have access to the database.
 
 ---
 
-## First Version Mission
+## First Mission
 
 Your goal is to hack into this task management app used by the Galactic Empire. Our sources say that Darth Vader was part of the first 20 users of the app. We need you to hack into his account and get the location of a secret research station.
 

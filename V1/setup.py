@@ -83,4 +83,19 @@ for i in range(amount):
 for thread in threads:
     thread.join()
 
-create_task(random.randint(3,17), {'title': 'Log in to bank and update', 'description': f'bank account information Token_{generate_password(8)}'})
+with open('setup/planets.json') as f:
+    data = json.load(f)
+
+random_planet = random.choice()['plant']
+random_description = random.choice()['description']
+
+create_task(random.randint(3,17), {'title': 'Inspect Base', 'description': random_description})
+
+print("http://localhost:1111")
+print("""Your goal is to hack into this task management app used by the Galactic Empire.
+Our sources say that Darth Vader was part of the first 20 users of the app.
+We need you to hack into his account and get the location of a secret base.""")
+input("Press Enter to continue...")
+print("We have provided you with the resources you will need in the Mission 1 document.")
+print("Good luck, and may the Force be with you!")
+input("When you get the information press enter...")
