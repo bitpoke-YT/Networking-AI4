@@ -99,3 +99,9 @@ input("Press Enter to continue...")
 print("We have provided you with the resources you will need in the Mission 1 document.")
 print("Good luck, and may the Force be with you!")
 input("When you get the information press enter...")
+print("What planet is the secret base on?")
+Planet = input("Planet: ")
+if Planet.lower() == random_planet.lower():
+    print("Congratulations! You have successfully completed the mission.")
+else:
+    print("Incorrect planet. we will get them next time.")

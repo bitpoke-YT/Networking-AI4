@@ -14,7 +14,7 @@ To edit cookies in Chromium-based browsers, follow these steps:
 5. **Select the Domain**: Choose the domain for which you want to edit cookies 🌐.
 6. **Edit Cookies**: You can now edit, add, or delete cookies for the selected domain 📝.
 
-![Chromium Cookies Editor](chromium_cookies_editor.png)
+![Chromium Cookies Editor](Images/chromium_cookies_editor.png)
 
 ## Editing Cookies in Mozilla Firefox 🦊
 To edit cookies in Firefox, follow these steps:
