@@ -4,12 +4,18 @@ import task
 import datetime
 
 class database():
-    __server = None
-    _instance = None
+    def __init__(self):
+        path = os.path.expanduser('~/Documents/Networking-AI4/V1')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
+        self.__server.execute('PRAGMA journal_mode=WAL;')  # Enable WAL mode
+        self.__server.execute('PRAGMA busy_timeout=5000;') # Wait up to 5 seconds for locks
+        self.__setupTable()
 
     def __setupTable(self):
-        if self.__server == None:
-            raise "Server Not Setup Yet"
+        if self.__server is None:
+            raise Exception("Server Not Setup Yet")
         cursor = self.__server.cursor()
 
         cursor.execute('''
@@ -36,29 +42,20 @@ class database():
 
         self.__server.commit()
 
-    def __new__(cls):
-        if cls._instance is not None:
-            return cls._instance
-        
-        cls._instance = super(database, cls).__new__(cls)
-        path = os.path.expanduser('~/Documents/Networking-AI4/V1')
-        if not os.path.exists(path):
-            os.makedirs(path)
-        try:
-            cls.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
-            cls._instance.__setupTable()
-        except Exception as e:
-            return cls._instance
-
-
     def addTasks(self, tasks, userID):
         cursor = self.__server.cursor()
         for task in tasks:
             params = task.databaseTuple()
             cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
             ID = cursor.lastrowid
-            cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
-        
+            # Ensure both userID and ID are integers
+            try:
+                userID_int = int(userID)
+                ID_int = int(ID)
+            except Exception as e:
+                print(f"Type conversion error in addTasks: userID={userID}, ID={ID}, error={e}")
+                raise
+            cursor.execute("INSERT INTO TaskUser (UserID, TaskID) VALUES (?, ?)", (userID_int, ID_int))
         self.__server.commit()
 
     def addTask(self, task, userID):
@@ -66,7 +63,14 @@ class database():
         params = task.databaseTuple()
         cursor.execute(f"INSERT INTO Tasks VALUES (NULL, ?, ?, ?, ?)", params)
         ID = cursor.lastrowid
-        cursor.execute(f"INSERT INTO TaskUser (TaskID, UserID) VALUES ({ID}, {userID})")
+        # Ensure both userID and ID are integers
+        try:
+            userID_int = int(userID)
+            ID_int = int(ID)
+        except Exception as e:
+            print(f"Type conversion error in addTask: userID={userID}, ID={ID}, error={e}")
+            raise
+        cursor.execute("INSERT INTO TaskUser (UserID, TaskID) VALUES (?, ?)", (userID_int, ID_int))
         self.__server.commit()
 
         return ID
@@ -143,3 +147,8 @@ class database():
         if row:
             return {'userid': row[0], 'username': row[1], 'password': row[2]}
         return None
+
+    def close(self):
+        if self.__server:
+            self.__server.close()
+            self.__server = None

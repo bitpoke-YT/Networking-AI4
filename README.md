@@ -1,34 +1,55 @@
 # Networking AI4
 
-You will be expoliting security expolit in a miss configured flask server. The expolit entails you editing cookies to accses data they are unauthorized to get. 
+You will be exploiting a security exploit in a misconfigured Flask server. The exploit entails editing cookies to access data you are unauthorized to get.
 
-The first version
-Skills:
- - Cookie Edditing 
- - HTTP requests
- 
-tools:
- - Webowser (Chrome or firefox based)
+---
 
-The Second version 
-Skills:
- - HTTP requests
- - Python or bash Scrpiting
+## Versions
 
-tools:
- - python (If using)
+### First Version
 
-Third Version
+**Skills:**
+- Cookie Editing
+- HTTP Requests
 
-Should be un breakable if you don't have accsess to the database.
+**Tools:**
+- Web browser (Chrome or Firefox based)
 
-if you can hack that would be amazing
+---
 
-Setup:
- - ./Startup.sh
- - first version
- - localhost:1111
- - Second Version
- - localhost:3333
- - Thrid Version
- - localhost:4444
+### Second Version
+
+**Skills:**
+- HTTP Requests
+- Python or Bash Scripting
+
+**Tools:**
+- Python (if using)
+
+---
+
+### Third Version
+
+Should be unbreakable if you don't have access to the database.
+
+> If you can hack that, it would be amazing!
+
+---
+
+## Setup
+
+```sh
+./Startup.sh
+```
+
+- First Version: [http://localhost:1111](http://localhost:1111)
+- Second Version: [http://localhost:3333](http://localhost:3333)
+- Third Version: [http://localhost:4444](http://localhost:4444)
+
+---
+
+## First Version Mission
+
+Your goal is to hack into this task management app used by the Galactic Empire. Our sources say that Darth Vader was part of the first 20 users of the app. We need you to hack into his account and get the location of a secret research station.
+
+We have provided you with the resources you will need in the Mission 1 document.

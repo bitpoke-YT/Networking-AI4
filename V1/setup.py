@@ -43,22 +43,22 @@ def create_task(session_id, task_data):
         return False
 
 
-def setup_account():
+def setup_account(num_tasks):
     # Generate random username and password
     username = generate_username()
     password = generate_password()
 
     session_id = create_account(username, password)
 
-    if session_id:
-        # Create tasks for the new account
-        num_tasks = random.randint(1, 5)
+    if session_id != None:
         for i in range(num_tasks):
             task_data = random.choice(tasks)
             if create_task(session_id, task_data):
-                print(f'Task created: {task_data["title"]}')
+                ...
             else:
                 print(f'Failed to create task: {task_data["title"]}')
+    else:
+        print(f'Failed to create account for username: {username}')
 
 n = len(sys.argv)
 if n != 2:
@@ -72,11 +72,15 @@ except:
 
 # Create threads for each account setup
 threads = []
+
 for i in range(amount):
-    thread = threading.Thread(target=setup_account)
+    thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
     threads.append(thread)
     thread.start()
+    time.sleep(0.02)  # Slight delay to avoid overwhelming the server
 
 # Wait for all threads to complete
 for thread in threads:
     thread.join()
+
+create_task(random.randint(3,17), {'title': 'Log in to bank and update', 'description': f'bank account information Token_{generate_password(8)}'})

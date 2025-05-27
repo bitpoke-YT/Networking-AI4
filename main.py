@@ -114,18 +114,12 @@ def tasks():
         description = data.get('description')
         due_date = data.get('dueDate')
         putTask = task.Task(title, description, due_date)
-        taskid = db.addTask(putTask, userid)
+        try:
+            taskid = db.addTask(putTask, userid)
+        except:
+            raise exception(f"Failed to add task to the database {userid}")
         if not taskid:
             return jsonify({'message': 'Failed to create task', 'taskid': None}), 500
-        from datetime import datetime
-        due_date_str = datetime.fromtimestamp(int(due_date)/1000).strftime('%Y-%m-%d')
-        task_dict = {
-            'taskid': taskid,
-            'title': title,
-            'description': description,
-            'due_date': due_date_str,
-            '__completed': False
-        }
         return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
 
     return redirect(url_for('mainPage'))
