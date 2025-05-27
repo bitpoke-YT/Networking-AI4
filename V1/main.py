@@ -62,32 +62,27 @@ def tasks():
     if request.cookies.get('sessionID', 0) == 0:
         return redirect(url_for('login'))
     userid = request.cookies.get('sessionID')
+    db = database.database()
     print(f"The user id is {userid}")
     if request.method == "GET":
         completed = request.args.get("completed")
-        # Use session userid if not provided
         if completed is not None:
             completed = completed.lower() == "true"
-            taskList = task.TaskList(userid)
-            tasks_data = ""
-            if completed:
-                tasks_data = taskList.getCompleatedTasks()
-            else:
-                tasks_data = taskList.getTasks()
-            tasks_json = []
-            for t in tasks_data:
-                tasks_json.append({
-                    'taskid': getattr(t, 'taskid', None),
-                    'title': getattr(t, 'title', ''),
-                    'description': getattr(t, 'description', ''),
-                    'due_date': t.due_date.strftime('%Y-%m-%d') if hasattr(t, 'due_date') else '',
-                    '__completed': getattr(t, '_Task__completed', False)
-                })
+            tasks_data = db.getCompleatedTasks(userid) if completed else db.getCurrentTasks(userid)
+            tasks_json = [
+                {
+                    'taskid': t.taskid,
+                    'title': t.title,
+                    'description': t.description,
+                    'due_date': t.due_date.strftime('%Y-%m-%d'),
+                    '__completed': t._Task__completed
+                }
+                for t in tasks_data
+            ]
             return jsonify({'tasks': tasks_json})
 
-        # Render page with tasks
-        taskList = task.TaskList(userid)
-        context = {'tasks': taskList.getTasks(), 'userid': userid}
+        tasks_data = db.getCurrentTasks(userid)
+        context = {'tasks': tasks_data, 'userid': userid}
         return render_template("userTask.html", **context)
 
     if request.method == "PUT":
@@ -97,11 +92,8 @@ def tasks():
         title = data.get('title')
         description = data.get('description')
         due_date = data.get('dueDate')
-        # Always use session userid
-        userid = request.cookies.get('sessionID')
         putTask = task.Task(title, description, due_date)
-        taskList = task.TaskList(userid)
-        taskid = taskList.add_task(putTask)
+        taskid = db.addTask(putTask, userid)
         if not taskid:
             return jsonify({'message': 'Failed to create task', 'taskid': None}), 500
         from datetime import datetime
@@ -126,8 +118,8 @@ def taskComplete():
         if data is None:
             return jsonify({'message': 'Invalid request body'}), 400
         taskid = data.get('taskid')
-        server = database.database()
-        server.completeTask(taskid) 
+        db = database.database()
+        db.completeTask(taskid)
         return jsonify({'message': 'Task completed successfully'}), 200
     return redirect(url_for('mainPage'))
 
