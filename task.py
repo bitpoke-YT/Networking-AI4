@@ -32,10 +32,13 @@ class TaskList:
 
     def __new__(cls, userID):
         if userID not in cls._instances:
+            print(f"Creating new TaskList for user {userID}.")
             cls.__userid = userID
             instance = super(TaskList, cls).__new__(cls)
             cls.__database = database.database()
             cls._instances[userID] = instance
+        else:
+            print(f"TaskList for user {userID} already exists, returning existing instance.")
         return cls._instances[userID]
 
     def add_task(self, task):

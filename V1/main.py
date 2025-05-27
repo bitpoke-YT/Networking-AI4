@@ -31,7 +31,7 @@ def register():
         # Register user
         hashed_pw = generate_password_hash(password)
         userid = db.createUser(username, hashed_pw)
-        resp = make_response(redirect(url_for('tasks')), 201)
+        resp = make_response(redirect(url_for('tasks')))
         resp.set_cookie('sessionID', f"{userid}")
         return resp
     return render_template("register.html")
@@ -44,15 +44,16 @@ def login():
         db = database.database()
         user = db.getUserByUsername(username)
         if user and check_password_hash(user['password'], password):
-            resp = make_response(redirect(url_for('tasks')), 201)
-            resp.set_cookie('sessionID', f"{user['userid']}")
+            resp = make_response(redirect(url_for('tasks')))
+            resp.set_cookie('sessionID', str(user['userid']))
             return resp
-        return render_template("login.html", error="Invalid credentials.")
-    return render_template("login.html")
+        return make_response(render_template("login.html", error="Invalid credentials."), 401)
+    else:
+        return render_template("login.html")
 
 @app.route("/logout")
 def logout():
-    resp = make_response(redirect(url_for('mainPage')), 201)
+    resp = make_response(redirect(url_for('mainPage')))
     resp.set_cookie('userid', '', expires=0)
     return resp
 

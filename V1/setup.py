@@ -4,6 +4,7 @@ import random
 import string
 import sys
 import time
+import threading
 
 # Load tasks from data.json
 with open('setup/data.json') as f:
@@ -24,18 +25,8 @@ def generate_password(length=12):
 def create_account(username, password):
     url = 'http://localhost:1111/register'
     data = {'username': username, 'password': password}
-    response = requests.post(url, data=data)
-    if response.status_code == 201:
-        return True
-    else:
-        return False
-
-# Function to login to an existing account
-def login_account(username, password):
-    url = 'http://localhost:1111/login'
-    data = {'username': username, 'password': password}
-    response = requests.post(url, data=data)
-    if response.status_code == 201:
+    response = requests.post(url, data=data, allow_redirects=False)
+    if response.status_code in [201, 200, 302]:
         return response.cookies['sessionID']
     else:
         return None
@@ -44,10 +35,9 @@ def login_account(username, password):
 def create_task(session_id, task_data):
     url = 'http://localhost:1111/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
-    data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))
-}
+    data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
     response = requests.put(url, headers=headers, json=data)
-    if response.status_code == 201:
+    if response.status_code in [201, 200, 302]:
         return True
     else:
         return False
@@ -58,27 +48,17 @@ def setup_account():
     username = generate_username()
     password = generate_password()
 
-    # Create a new account
-    if create_account(username, password):
-        print(f'Account created for {username} with password {password}')
-    else:
-        print(f'Failed to create account for {username}')
+    session_id = create_account(username, password)
 
-    # Login to the new account
-    session_id = login_account(username, password)
     if session_id:
-        print(f'Logged in as {username} with session ID {session_id}')
-    else:
-        print(f'Failed to login as {username}')
-
-    # Create tasks for the new account
-    num_tasks = random.randint(1, 5)
-    for i in range(num_tasks):
-        task_data = random.choice(tasks)
-        if create_task(session_id, task_data):
-            print(f'Task created: {task_data["title"]}')
-        else:
-            print(f'Failed to create task: {task_data["title"]}')
+        # Create tasks for the new account
+        num_tasks = random.randint(1, 5)
+        for i in range(num_tasks):
+            task_data = random.choice(tasks)
+            if create_task(session_id, task_data):
+                print(f'Task created: {task_data["title"]}')
+            else:
+                print(f'Failed to create task: {task_data["title"]}')
 
 n = len(sys.argv)
 if n != 2:
@@ -90,5 +70,13 @@ try:
 except:
     raise("Not INT")
 
-for i in range(int(sys.argv[1])):
-    setup_account()
+# Create threads for each account setup
+threads = []
+for i in range(amount):
+    thread = threading.Thread(target=setup_account)
+    threads.append(thread)
+    thread.start()
+
+# Wait for all threads to complete
+for thread in threads:
+    thread.join()
