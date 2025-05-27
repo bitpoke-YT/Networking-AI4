@@ -27,6 +27,121 @@ print(response.text)
 ```
 This sends a GET request to the server with the specified cookies.
 
+## Sending POST Requests 📨
+You can also send data to a server using POST requests. This is useful for submitting forms or sending data in the body of the request.
+
+Example:
+```python
+import requests
+
+url = "https://example.com/login"
+data = {"username": "micah", "password": "hunter2"}
+response = requests.post(url, data=data)
+print(response.text)
+```
+
+## Uploading Files 📤
+You can upload files to a server using the `files` parameter in a POST request.
+
+Example:
+```python
+import requests
+
+url = "https://example.com/upload"
+files = {"file": open("myfile.txt", "rb")}
+response = requests.post(url, files=files)
+print(response.status_code)
+```
+
+## Custom Headers 🏷️
+Sometimes you need to send custom headers, like a user-agent or authorization token.
+
+Example:
+```python
+import requests
+
+url = "https://example.com"
+headers = {"User-Agent": "MyApp/1.0", "Authorization": "Bearer <token>"}
+response = requests.get(url, headers=headers)
+print(response.status_code)
+```
+
+## Handling JSON Responses 📦
+Many APIs return data in JSON format. You can easily parse JSON responses with `response.json()`.
+
+Example:
+```python
+import requests
+
+url = "https://api.example.com/data"
+response = requests.get(url)
+if response.status_code == 200:
+    data = response.json()
+    print(data)
+else:
+    print("Request failed.")
+```
+
+## Handling Redirects 🔀
+By default, `requests` follows redirects. You can disable this or check the redirect chain.
+
+Example:
+```python
+import requests
+
+url = "http://github.com"
+response = requests.get(url, allow_redirects=False)
+print(response.status_code)  # 301 or 302 for redirect
+print(response.headers.get("Location"))  # Redirect target
+```
+
+## Setting Timeouts ⏰
+Set a timeout to avoid waiting forever for a response.
+
+Example:
+```python
+import requests
+
+url = "https://example.com"
+try:
+    response = requests.get(url, timeout=5)  # 5 seconds timeout
+    print(response.status_code)
+except requests.Timeout:
+    print("Request timed out!")
+```
+
+## Error Handling 🚨
+Always handle possible errors when making requests.
+
+Example:
+```python
+import requests
+
+url = "https://example.com"
+try:
+    response = requests.get(url)
+    response.raise_for_status()  # Raises HTTPError for bad responses
+    print(response.text)
+except requests.RequestException as e:
+    print(f"An error occurred: {e}")
+```
+
+## Using Proxies 🕵️
+You can route your requests through a proxy server.
+
+Example:
+```python
+import requests
+
+url = "https://example.com"
+proxies = {
+    "http": "http://10.10.1.10:3128",
+    "https": "http://10.10.1.10:1080",
+}
+response = requests.get(url, proxies=proxies)
+print(response.status_code)
+```
+
 ## Checking for a Phrase in the Response 🔍
 After sending a request, you can check if a certain phrase appears in the response content.
 
