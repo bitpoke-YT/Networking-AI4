@@ -27,6 +27,8 @@ def before_request():
 def mainPage():
     if 'userid' in session:
         return redirect(url_for('tasks'))
+    elif request.cookies.get('sessionID', 0) == 0:
+        return redirect(url_for('tasks'))
     return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -46,7 +48,9 @@ def register():
         userid = db.createUser(username, hashed_pw)
         session['userid'] = userid
         session['username'] = username
-        return redirect(url_for('tasks'))
+        resp = make_response(redirect(url_for('tasks')))
+        resp.set_cookie('sessionID', f"{userid}")
+        return resp
     return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -59,20 +63,25 @@ def login():
         if user and check_password_hash(user['password'], password):
             session['userid'] = user['userid']
             session['username'] = username
-            return redirect(url_for('tasks'))
+            resp = make_response(redirect(url_for('tasks')))
+            resp.set_cookie('sessionID', f"{user['userid']}")
+            return resp
         return render_template("login.html", error="Invalid credentials.")
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('mainPage'))
+    resp = make_response(redirect(url_for('mainPage')))
+    resp.set_cookie('userid', '', expires=0)
+    return resp
 
 @app.route("/tasks", methods=["GET", "POST", "PUT"])
 def tasks():
-    if 'userid' not in session:
+    if 'userid' not in session or request.cookies.get('sessionID', 0) == 0:
         return redirect(url_for('login'))
     userid = session['userid']
+    userid = request.cookies.get('sessionID')
     print(f"The user id is {userid}")
     if request.method == "GET":
         completed = request.args.get("completed")
@@ -100,16 +109,6 @@ def tasks():
         context = {'tasks': taskList.getTasks(), 'userid': userid}
         return render_template("userTask.html", **context)
 
-    if request.method == "POST":
-        # Only used for form POST from home.html (legacy)
-        ID = request.form.get("userId")
-        if not ID:
-            return redirect(url_for('mainPage'))
-        session['userid'] = ID
-        taskList = task.TaskList(ID)
-        context = {'tasks': taskList.getTasks(), 'userid': ID}
-        return render_template("userTask.html", **context)
-
     if request.method == "PUT":
         data = request.get_json()
         if data is None:
@@ -119,6 +118,7 @@ def tasks():
         due_date = data.get('dueDate')
         # Always use session userid
         userid = session['userid']
+        userid = request.cookies.get('sessionID')
         putTask = task.Task(title, description, due_date)
         taskList = task.TaskList(userid)
         taskid = taskList.add_task(putTask)
@@ -140,6 +140,8 @@ def tasks():
 @app.route("/task", methods=["POST"])
 def taskComplete():
     if 'userid' not in session:
+        return redirect(url_for('login'))
+    elif request.cookies.get('sessionID', 0) == 0:
         return redirect(url_for('login'))
     if request.method == "POST":
         data = request.get_json()
