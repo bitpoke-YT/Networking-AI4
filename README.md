@@ -21,10 +21,10 @@ You will be exploiting a security exploit in a misconfigured Flask server. The e
 
 **Skills:**
 - HTTP Requests
-- Python or Bash Scripting
+- Python
 
 **Tools:**
-- Python (if using)
+- Python
 
 ---
 

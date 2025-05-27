@@ -2,6 +2,7 @@ import sqlite3
 import os 
 import task
 import datetime
+import random
 
 class database():
     def __init__(self):
@@ -136,9 +137,15 @@ class database():
     # --- User Authentication Methods ---
     def createUser(self, username, password_hash):
         cursor = self.__server.cursor()
-        cursor.execute("INSERT INTO User (UserName, Password) VALUES (?, ?)", (username, password_hash))
+        # Generate a unique random UserID in range 100-2000
+        while True:
+            userid = random.randint(100, 2000)
+            cursor.execute("SELECT 1 FROM User WHERE UserID = ?", (userid,))
+            if cursor.fetchone() is None:
+                break
+        cursor.execute("INSERT INTO User (UserID, UserName, Password) VALUES (?, ?, ?)", (userid, username, password_hash))
         self.__server.commit()
-        return cursor.lastrowid
+        return userid
 
     def getUserByUsername(self, username):
         cursor = self.__server.cursor()
