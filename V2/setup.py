@@ -23,7 +23,7 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:1111/register'
+    url = 'http://localhost:3333/register'
     data = {'username': username, 'password': password}
     response = requests.post(url, data=data, allow_redirects=False)
     if response.status_code in [201, 200, 302]:
@@ -33,7 +33,7 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:1111/tasks'
+    url = 'http://localhost:3333/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
     response = requests.put(url, headers=headers, json=data)
@@ -60,49 +60,164 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-n = len(sys.argv)
-if n != 2:
-    raise("Error did not enter 1 arg")
+def special_setup_account(num_tasks, task_data_main):
+    # Generate random username and password
+    username = generate_username()
+    password = generate_password()
 
+    session_id = create_account(username, password)
 
-try:
-    amount = int(sys.argv[1])
-except:
-    raise("Not INT")
+    print(session_id)
 
-# Create threads for each account setup
-threads = []
+    if session_id != None:
+        if create_task(session_id, task_data_main):
+            ...
+        else:
+            raise Exception(f'Failed to create main task: {task_data_main["title"]}')
+        for i in range(num_tasks):
+            task_data = random.choice(tasks)
+            if create_task(session_id, task_data):
+                ...
+            else:
+                print(f'Failed to create task: {task_data["title"]}')
+    else:
+        raise Exception(f'Failed to create account for username: {username}')
 
-for i in range(amount):
-    thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
-    threads.append(thread)
-    thread.start()
-    time.sleep(0.02)  # Slight delay to avoid overwhelming the server
+def setup():
+    try:
+        amount = int(sys.argv[1])
+    except:
+        amount = 300
 
-# Wait for all threads to complete
-for thread in threads:
-    thread.join()
+    # Create threads for each account setup
+    threads = []
 
-with open('setup/planets.json') as f:
-    data = json.load(f)
+    for i in range(amount):
+        thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
+        threads.append(thread)
+        thread.start()
+        time.sleep(0.02)  # Slight delay to avoid overwhelming the server
 
-random_data = random.choice(data)
-random_planet = random_data['plant']
-random_description = random_data['description']
+    # Wait for all threads to complete
+    for thread in threads:
+        thread.join()
 
-create_task(random.randint(3,17), {'title': 'Inspect Base', 'description': random_description})
+    with open('setup/planets.json') as f:
+        data = json.load(f)
 
-print("http://localhost:1111")
-print("""Your goal is to hack into this task management app used by the Galactic Empire.
-Our sources say that Darth Vader was part of the first 20 users of the app.
-We need you to hack into his account and get the location of a secret base.""")
-input("Press Enter to continue...")
-print("We have provided you with the resources you will need in the Mission 1 document.")
-print("Good luck, and may the Force be with you!")
-input("When you get the information press enter...")
-print("What planet is the secret base on?")
-Planet = input("Planet: ")
-if Planet.lower() == random_planet.lower():
-    print("Congratulations! You have successfully completed the mission.")
-else:
-    print("Incorrect planet. we will get them next time.")
+    random_data = random.choice(data)
+    random_planet = random_data['plant']
+    random_description = random_data['description']
+
+    special_setup_account(random.randint(1, 3), {
+        'title': 'Inspect Base',
+        'description': random_description
+    })
+
+    with open('setup/KyberCrystal.json') as f:
+        data = json.load(f)
+
+    random_data = random.choice(data)
+    random_planet = random_data['plant']
+    random_description = random_data['description']
+
+    special_setup_account(random.randint(1, 3), {
+        'title': 'Get Kyber crystal update',
+        'description': random_description
+    })
+    plumming = []
+    for i in range(random.randint(1, 5)):
+        plumming.append(random.choice(data)['plant'])
+    plumming.append(random_planet)
+    special_setup_account(random.randint(1, 3), {
+        'title': 'Fix plumming',
+        'description': f"The plumming is broken on {plumming}."
+    })
+    fooddrop = []
+    for i in range(random.randint(1, 10)):
+        fooddrop.append(random.choice(data)['plant'])
+    for i in fooddrop:
+        special_setup_account(random.randint(1, 3), {
+            'title': 'Food drop',
+            'description': f"Deliver food to {i}."
+        })
+    medicine = []
+    for i in range(random.randint(1, 10)):
+        medicine.append(random.choice(data)['plant'])
+    for i in medicine:
+        special_setup_account(random.randint(1, 3), {
+            'title': 'Deliver medicine',
+            'description': f"Deliver medicine to {i}."
+        })
+    random_coordinates = f"[{round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-3, 3), 3)}]"
+
+    special_setup_account(random.randint(1, 3), {
+        'title': 'EMERGANCY Medevac',
+        'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
+    })
+
+# Story
+def story():
+    print("http://localhost:3333")
+    print(
+        """Your mission is to hack into this task management app used by the Galactic Empire.
+Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
+We don't know which account has the information, so you'll need to figure out a way to automate the process of hacking into accounts, retrieving, and checking the information.
+Your objective: hack into the right account and discover the planet where the Kyber crystal is hidden."""
+    )
+    input("Press Enter to continue...")
+    print("We have provided you with the resources you will need in the Mission 2 document.")
+    print("Good luck, and may the Force be with you!")
+    input("When you get the information, press Enter...")
+    print("On which planet is the Kyber crystal hidden?")
+    Planet = input("Planet: ")
+    if Planet.lower() == random_planet.lower():
+        print("Good Job you have found the planet where the Kyber crystal is hidden.")
+    else:
+        print("Incorrect planet. The Kyber crystal remains hidden... for now.")
+        return
+    print(f"We are unable to find the coordinates of {random_planet}.")
+    input("Press Enter to continue...")
+    print(f"We need you to find the coordinates on {random_planet} where the Kyber crystal is located.")
+    print("You should be able to use the tool you coded to find the coordinates.")
+    input("When you get the information, press Enter...")
+    print("What are the coordinates of the Kyber crystal?")
+    coordinates = input("Coordinates: ")
+    if coordinates == random_coordinates:
+        print("\nMission Success!\n")
+        print(f"You have located the Kyber crystal on {random_planet} at coordinates {random_coordinates}.")
+        print("You quickly transmit the coordinates to the Rebel fleet. The strike team is scrambled and bombers are dispatched.")
+        print("\n--- Rebel Bomber Channel ---")
+        time.sleep(1)
+        print("Cobalt Leader: All wings report in.")
+        time.sleep(1)
+        print("Cobalt Two: Cobalt Two standing by.")
+        time.sleep(1)
+        print("Cobalt Three: Cobalt Three standing by.")
+        time.sleep(1)
+        print("Cobalt Leader: Target locked. Beginning attack run on Imperial facility.")
+        time.sleep(2)
+        print("Cobalt Two: Anti-air batteries are active, evasive maneuvers!")
+        time.sleep(1)
+        print("Cobalt Leader: Stay on target...")
+        time.sleep(1)
+        print("Cobalt Three: Bombs away!")
+        time.sleep(2)
+        # 0.5% chance of failure
+        if pyrandom.random() < 0.005:
+            print("Cobalt Leader: Direct hit... wait, the Kyber crystal is still intact! The Empire's shields held. We'll have to try again another day.")
+            print("Mission failed. The Kyber crystal remains in Imperial hands... for now.")
+            return
+        print("Cobalt Leader: Direct hit! The Kyber crystal is shattering—massive energy surge detected!")
+        time.sleep(1)
+        print("Cobalt Two: The entire facility is going up! That's one less superweapon for the Empire.")
+        time.sleep(1)
+        print("Cobalt Leader: Mission accomplished. Returning to base. The galaxy owes you one, agent.")
+        print("\n--- Transmission Ended ---\n")
+        print("The Rebellion celebrates your victory! The Empire's plans are in ruins, and the galaxy is safer thanks to your skill and courage.")
+        print("\nCongratulations! You have successfully completed the Kyber crystal mission and struck a major blow against the Empire.")
+    else:
+        print("Incorrect coordinates. The Kyber crystal remains hidden... for now.")
+        return
+
+story()

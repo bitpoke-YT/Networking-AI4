@@ -6,7 +6,7 @@ import random
 
 class database():
     def __init__(self):
-        path = os.path.expanduser('~/Documents/Networking-AI4/V1')
+        path = os.path.expanduser('~/Documents/Networking-AI4/V2')
         if not os.path.exists(path):
             os.makedirs(path)
         self.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
@@ -139,7 +139,7 @@ class database():
         cursor = self.__server.cursor()
         # Generate a unique random UserID in range 100-2000
         while True:
-            userid = random.randint(100, 2000)
+            userid = random.randint(100, 500)
             cursor.execute("SELECT 1 FROM User WHERE UserID = ?", (userid,))
             if cursor.fetchone() is None:
                 break

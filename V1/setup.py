@@ -60,15 +60,10 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-n = len(sys.argv)
-if n != 2:
-    raise("Error did not enter 1 arg")
-
-
 try:
     amount = int(sys.argv[1])
 except:
-    raise("Not INT")
+    amount = 30
 
 # Create threads for each account setup
 threads = []
