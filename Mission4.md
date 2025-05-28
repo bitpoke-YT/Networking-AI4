@@ -138,10 +138,4 @@ if bcrypt.checkpw(password, hashed):
 ## Conclusion 🧾
 Understanding encryption is vital for secure software development. While Base64 encoding and weak algorithms like XOR or ECB mode are useful for learning, always use **modern cryptographic libraries** in production. Stay secure! 🔒
 
-## References 📚
-- [Python `base64` Documentation](https://docs.python.org/3/library/base64.html)
-- [PyCryptodome Documentation](https://pycryptodome.readthedocs.io/)
-- [OWASP Cryptographic Storage Cheat Sheet](https://owasp.org/www-project-cheat-sheets/)
-```
-
 ---
