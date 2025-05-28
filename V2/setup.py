@@ -95,7 +95,7 @@ def setup():
         thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
         threads.append(thread)
         thread.start()
-        time.sleep(0.02)  # Slight delay to avoid overwhelming the server
+        time.sleep(0.0002)  # Slight delay to avoid overwhelming the server
 
     # Wait for all threads to complete
     for thread in threads:
@@ -157,8 +157,9 @@ def setup():
     story(random_planet, random_coordinates)
 
 def story(random_planet, random_coordinates):
-
+    import webbrowser
     print("http://localhost:3333")
+    webbrowser.open_new('http://localhost:3333')
     print(
         """Your mission is to hack into this task management app used by the Galactic Empire.
 Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
@@ -188,30 +189,30 @@ Your objective: hack into the right account and discover the planet where the Ky
         print(f"You have located the Kyber crystal on {random_planet} at coordinates {random_coordinates}.")
         print("You quickly transmit the coordinates to the Rebel fleet. The strike team is scrambled and bombers are dispatched.")
         print("\n--- Rebel Bomber Channel ---")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Leader: All wings report in.")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Two: Cobalt Two standing by.")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Three: Cobalt Three standing by.")
-        time.sleep(1)
+        time.sleep(random.uniform(1, 2))
         print("Cobalt Leader: Target locked. Beginning attack run on Imperial facility.")
-        time.sleep(2)
+        time.sleep(random.uniform(1, 3))
         print("Cobalt Two: Anti-air batteries are active, evasive maneuvers!")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Leader: Stay on target...")
-        time.sleep(1)
+        time.sleep(random.uniform(1, 3))
         print("Cobalt Three: Bombs away!")
-        time.sleep(2)
+        time.sleep(random.uniform(0.1, 1))
         # 0.5% chance of failure
         if pyrandom.random() < 0.005:
             print("Cobalt Leader: Direct hit... wait, the Kyber crystal is still intact! The Empire's shields held. We'll have to try again another day.")
             print("Mission failed. The Kyber crystal remains in Imperial hands... for now.")
             return
         print("Cobalt Leader: Direct hit! The Kyber crystal is shattering—massive energy surge detected!")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Two: The entire facility is going up! That's one less superweapon for the Empire.")
-        time.sleep(1)
+        time.sleep(random.uniform(0.1, 1))
         print("Cobalt Leader: Mission accomplished. Returning to base. The galaxy owes you one, agent.")
         print("\n--- Transmission Ended ---\n")
         print("The Rebellion celebrates your victory! The Empire's plans are in ruins, and the galaxy is safer thanks to your skill and courage.")

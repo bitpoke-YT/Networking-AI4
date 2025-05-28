@@ -6,6 +6,7 @@ import sys
 import os
 import time
 import threading
+import webbrowser
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import input_with_hints
 # Load tasks from data.json
@@ -74,7 +75,7 @@ for i in range(amount):
     thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
     threads.append(thread)
     thread.start()
-    time.sleep(0.02)  # Slight delay to avoid overwhelming the server
+    time.sleep(0.0001)  # Slight delay to avoid overwhelming the server
 
 # Wait for all threads to complete
 for thread in threads:
@@ -90,6 +91,7 @@ random_description = random_data['description']
 create_task(random.randint(3,17), {'title': 'Inspect Secret Base', 'description': random_description})
 
 print("http://localhost:1111")
+webbrowser.open_new('http://localhost:1111')
 print("""Your goal is to hack into this task management app used by the Galactic Empire.
 Our sources say that Darth Vader was part of the first 20 users of the app.
 We need you to hack into his account and get the location of a secret base.""")
