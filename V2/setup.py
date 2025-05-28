@@ -180,7 +180,7 @@ Your objective: hack into the right account and discover the planet where the Ky
         return
     print(f"We are unable to find the coordinates of {random_planet}.")
     input("Press Enter to continue...")
-    print(f"We need you to find the coordinates on {random_planet} where the Kyber crystal is located.")
+    print(f"We need you to find the galactic coordinates of {random_planet} where the Kyber crystal is located.")
     print("You should be able to use the tool you coded to find the coordinates.")
     input("When you get the information, press Enter...")
     print("What are the coordinates of the Kyber crystal?")
