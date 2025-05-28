@@ -5,7 +5,6 @@ import string
 import sys
 import time
 import threading
-import base64
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import input_with_hints
@@ -108,14 +107,11 @@ def setup():
 
     print("Working on special setup...")
 
-    random_data = random.choice(data)
-    random_title = random_data['title']
-    random_description = random_data['description']
-    random_planet = random_data['planet']
-    random_troop = random_data['troopamount']
+    with open('setup/going.json') as f:
+        going = json.load(f)
 
-    random_planet_encoded = f"{base64.b64encode(random_planet.encode('ascii'))}"
-    random_description_encoded = f"{base64.b64encode(random_description.encode('ascii'))}"
+    random_task = random.choice(going)
+    random_title
 
     special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
         'title': random_planet_encoded,
