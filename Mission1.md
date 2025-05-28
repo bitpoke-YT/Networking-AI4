@@ -26,4 +26,4 @@ To edit cookies in Firefox, follow these steps:
 5. **Select the Domain**: Choose the domain for which you want to edit cookies 🌐.
 6. **Edit Cookies**: You can now edit, add, or delete cookies for the selected domain 📝.
 
-![Firefox Cookies Editor](firefox_cookies_editor.png)
+![Firefox Cookies Editor](Images/firefox_cookies_editor.png)
