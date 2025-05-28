@@ -6,7 +6,7 @@ import random
 
 class database():
     def __init__(self):
-        path = os.path.expanduser('~/Documents/Networking-AI4/V2')
+        path = os.path.expanduser('~/Documents/Networking-AI4/V4')
         if not os.path.exists(path):
             os.makedirs(path)
         self.__server = sqlite3.connect(f"{path}/Task.db")
@@ -30,7 +30,7 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS User (
-            UserID INTEGER PRIMARY KEY,
+            UserID INTEGER,
             UserName TEXT UNIQUE,
             Password TEXT
         )''')

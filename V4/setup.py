@@ -6,6 +6,9 @@ import sys
 import time
 import threading
 import base64
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from package.hintInput import input_with_hints
 
 # Load tasks from data.json
 with open('setup/data.json') as f:
@@ -68,8 +71,6 @@ def special_setup_account(num_tasks, task_data_main):
 
     session_id = create_account(username, password)
 
-    print(session_id)
-
     if session_id != None:
         if create_task(session_id, task_data_main):
             ...
@@ -103,6 +104,8 @@ def setup():
     for thread in threads:
         thread.join()
 
+    print("Working on special setup...")
+
     with open('setup/planets.json') as f:
         data = json.load(f)
 
@@ -110,10 +113,13 @@ def setup():
     random_planet = random_data['plant']
     random_description = random_data['description']
 
-    special_setup_account(random.randint(1, 3), {
+    # Multi-thread special_setup_account calls
+    special_threads = []
+
+    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
         'title': 'Inspect Base',
         'description': random_description
-    })
+    })))
 
     with open('setup/KyberCrystal.json') as f:
         data = json.load(f)
@@ -122,56 +128,63 @@ def setup():
     random_planet = random_data['plant']
     random_description = random_data['description']
 
-    special_setup_account(random.randint(1, 3), {
+    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
         'title': 'Get Kyber crystal update',
         'description': random_description
-    })
+    })))
+
     plumming = []
     for i in range(random.randint(1, 5)):
         plumming.append(random.choice(data)['plant'])
     plumming.append(random_planet)
-    special_setup_account(random.randint(1, 3), {
+    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
         'title': 'Fix plumming',
         'description': f"The plumming is broken on {plumming}."
-    })
+    })))
+
     fooddrop = []
     for i in range(random.randint(1, 10)):
         fooddrop.append(random.choice(data)['plant'])
     for i in fooddrop:
-        special_setup_account(random.randint(1, 3), {
+        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
             'title': 'Food drop',
             'description': f"Deliver food to {i}."
-        })
+        })))
+
     medicine = []
     for i in range(random.randint(1, 10)):
         medicine.append(random.choice(data)['plant'])
     for i in medicine:
-        special_setup_account(random.randint(1, 3), {
+        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
             'title': 'Deliver medicine',
             'description': f"Deliver medicine to {i}."
-        })
+        })))
+
     random_coordinates = f"[{round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-3, 3), 3)}]"
 
-    special_setup_account(random.randint(1, 3), {
+    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
         'title': 'EMERGANCY Medevac',
         'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
-    })
+    })))
 
     with open('setup/Troop.json') as f:
         data = json.load(f)
 
     for n in range(1, 30):
+        # Multi Thread
         random_data = random.choice(data)
         random_title = random_data['title']
         random_description = random_data['description']
         random_planet = random_data['planet']
         random_troop = random_data['troopamount']
 
-        special_setup_account(random.randint(1, 3), {
-            'title': base64.b64encode(random_title),
-            'description': base64.b64encode(random_description)
-        })
-    
+        random_title_encoded = base64.b64encode(random_title.encode("utf-8")).decode("utf-8")
+        random_description_encoded = base64.b64encode(random_description.encode("utf-8")).decode("utf-8")
+
+        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
+            'title': random_title_encoded,
+            'description': random_description_encoded
+        })))
 
     random_data = random.choice(data)
     random_title = random_data['title']
@@ -179,68 +192,71 @@ def setup():
     random_planet = random_data['planet']
     random_troop = random_data['troopamount']
 
-    special_setup_account(random.randint(1, 3), {
-        'title': base64.b64encode(random_title),
-        'description': base64.b64encode(random_description)
-    })
+    random_planet_encoded = f"{base64.b64encode(random_planet.encode('ascii'))}"
+    random_description_encoded = f"{base64.b64encode(random_description.encode('ascii'))}"
+
+    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
+        'title': random_planet_encoded,
+        'description': random_description_encoded
+    })))
+
+    # Start all special threads
+    for t in special_threads:
+        t.start()
+        time.sleep(0.01)  # Optional: slight delay to avoid server overload
+
+    # Wait for all special threads to complete
+    for t in special_threads:
+        t.join()
+
+    story(random_planet, random_troop)
     
 
 # Story
-def story():
+def story(random_planet, random_troop):
     print("http://localhost:4333")
     print(f"""
-Your mission is to infiltrate the Empire's encrypted troop management system.
-Intelligence indicates {random_planet}'s garrison contains critical data about
-their defenses - specifically the location of a secret weapons depot containing 
-prototype blasters for the Emperor's elite stormtroopers.
+Your mission: Hack into the Empire's task management software.
+Our sources say that the troop data might be encrypted.
+The Rebellion needs you to break through the encryption and discover the exact number of Imperial troops stationed on {random_planet}.
+This intel is critical to launching a ground assault on the weapon supply depot on {random_planet}.
 """)
     input("Press Enter to continue...")
     print("We have provided you with the resources you will need in the Mission 4 document.")
     print("May the Force be with you!")
-    input("When you breach the encryption, press Enter...")
-    print("What is the TROOP COUNT on the surface of " + random_planet + "?")
+    input_with_hints("When you breach the encryption, press Enter...", 600, [
+        "Hint: Make sure you don't get rate limited.",
+        "Hint: Look for Troops as it occurs in a few titles.",
+        "Hint: They are most likly using base64.",
+    ])
+    print(f"What is the TROOP COUNT on the surface of {random_planet}?")
     
     Troop = input("Troop Count: ")
-    if Troop.lower() == random_troop.lower():
-        print("Signal Boost: The first encryption layer collapses. Data streams reveal...")
+    if Troop.strip() == str(random_troop):
+        print("Decryption Success: The troop count is confirmed. You now have the intel needed for the ground assault.")
     else:
-        print("Security Alert: Wrong decryption key! Purge logs and retreat...")
+        print("Security Alert: Wrong decryption key! Imperial countermeasures have detected your intrusion. Abort mission!")
         return
-    
-    input("Press Enter to continue decrypting the second layer...")
-    print(f"""
-The raw numbers reveal patterns - this isn't just troop data. 
-The weapons depot's location is encoded in the transmission!
-Where is the secret weapons facility hidden?""")
-
-    Coordinates = input("Depot Coordinates: ")
-    if Coordinates == random_coordinates:
-        print("Breakthrough: The depot's location pulses in your data stream.")
-    else:
-        print("Counter-Intrusion: Imperial firewalls are closing in...")
-        return
-
-    print("\n--- Rebel Ground Team Channel ---")
+    print("\n--- Rebel Ground Assault Channel ---")
     time.sleep(1)
-    print("Serra Leader: We've got the coordinates - moving to extraction point.")
+    print("Squad Leader: Intel received. All units, prepare to breach the Imperial perimeter!")
     time.sleep(1.5)
-    print("Serra Two: Imperial patrols detected - do we proceed with night infiltration?")
+    print("Demo Team: Charges set. Ready on your mark, Commander.")
     time.sleep(1.5)
-    print("Serra Leader: Hold formation. We're going in under cover of darkness.")
+    print("You: All teams, go! Take the depot and secure the weapon supplies!")
     time.sleep(2)
-    
-    if pyrandom.random() < 0.005:
-        print("Serra Three: Blast! They've rerouted patrols - we need a new plan!")
-        print("The Empire's security adapts to your tactics. This victory will require more cunning...")
+    # 0.5% chance of failure
+    if random.random() < 0.005:
+        print("Heavy Blaster Fire: The Empire was ready. Our assault is repelled. We must fall back and regroup.")
+        print("Mission failed. The Empire holds the depot for now.")
         return
-    
-    print("Serra Leader: Breaching outer perimeter - thermite charges set!")
+    print("Blaster Fire Erupts! The Rebels storm the facility, overwhelming the surprised Imperial garrison!")
     time.sleep(1)
-    print("Serra Two: Direct breach! Weapons cache secured - loading proton packs now!")
-    time.sleep(1.5)
-    print("Serra Leader: Mission accomplished - transmitting weapon schematics to High Command!")
+    print("Squad Leader: Depot secured! We've captured the weapon supplies and vital schematics!")
     print("\n--- Transmission Secure ---")
-    print("The Empire's secrets now serve the Rebel cause. Your digital sabotage")
-    print("has delivered prototype weapons that will tip the balance in future battles...")
+    print("Your hacking and leadership have delivered a decisive victory for the Rebellion.")
+    print("Congratulations! You have successfully completed the mission.")
 
-story()
+
+if __name__ == "__main__":
+    setup()

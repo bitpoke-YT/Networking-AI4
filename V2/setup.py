@@ -95,7 +95,7 @@ def setup():
         thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
         threads.append(thread)
         thread.start()
-        time.sleep(0.0002)  # Slight delay to avoid overwhelming the server
+        time.sleep(0.02)  # Slight delay to avoid overwhelming the server
 
     # Wait for all threads to complete
     for thread in threads:

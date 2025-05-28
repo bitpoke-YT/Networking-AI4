@@ -118,17 +118,3 @@ if bcrypt.checkpw(password, hashed):
     print("Password matches!")
 ```
 
-
-
-## Best Practices 🧠
-1. **Never use MD5, SHA1, or ECB mode**.
-2. Use **AES-GCM** or **ChaCha20-Poly1305** for authenticated encryption.
-3. Store keys securely (e.g., environment variables, HSMs).
-4. Use **salting** and **key derivation functions** (PBKDF2, bcrypt).
-5. Avoid rolling your own crypto—use libraries like `cryptography` or `PyCryptodome`.
-
-
-
-## Conclusion 🧾
-Understanding encryption is vital for secure software development. While Base64 encoding and weak algorithms like XOR or ECB mode are useful for learning, always use **modern cryptographic libraries** in production. Stay secure! 🔒
-
