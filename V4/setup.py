@@ -5,6 +5,7 @@ import string
 import sys
 import time
 import threading
+import base64
 
 # Load tasks from data.json
 with open('setup/data.json') as f:
@@ -159,9 +160,28 @@ def setup():
     with open('setup/Troop.json') as f:
         data = json.load(f)
 
+    for n in range(1, 30):
+        random_data = random.choice(data)
+        random_title = random_data['title']
+        random_description = random_data['description']
+        random_planet = random_data['planet']
+        random_troop = random_data['troopamount']
+
+        special_setup_account(random.randint(1, 3), {
+            'title': base64.b64encode(random_title),
+            'description': base64.b64encode(random_description)
+        })
+    
+
+    random_data = random.choice(data)
+    random_title = random_data['title']
+    random_description = random_data['description']
+    random_planet = random_data['planet']
+    random_troop = random_data['troopamount']
+
     special_setup_account(random.randint(1, 3), {
-        'title': ''
-        'description'
+        'title': base64.b64encode(random_title),
+        'description': base64.b64encode(random_description)
     })
     
 
@@ -169,64 +189,19 @@ def setup():
 def story():
     print("http://localhost:4333")
     print(
-        """Your mission is to hack into this task management app used by the Galactic Empire.
-Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
-We don't know which account has the information, so you'll need to figure out a way to automate the process of hacking into accounts, retrieving, and checking the information.
-Your objective: hack into the right account and discover the planet where the Kyber crystal is hidden."""
+        f"""Your mission is to hack into this task management app used by the Galactic Empire.
+We would like to get the amount of troops on {random_planet} we know that te data in encrypted"""
     )
     input("Press Enter to continue...")
-    print("We have provided you with the resources you will need in the Mission 2 document.")
+    print("We have provided you with the resources you will need in the Mission 4 document.")
     print("Good luck, and may the Force be with you!")
     input("When you get the information, press Enter...")
     print("On which planet is the Kyber crystal hidden?")
-    Planet = input("Planet: ")
-    if Planet.lower() == random_planet.lower():
+    Troop = input("troop: ")
+    if Troop.lower() == random_troop.lower():
         print("Good Job you have found the planet where the Kyber crystal is hidden.")
     else:
         print("Incorrect planet. The Kyber crystal remains hidden... for now.")
-        return
-    print(f"We are unable to find the coordinates of {random_planet}.")
-    input("Press Enter to continue...")
-    print(f"We need you to find the coordinates on {random_planet} where the Kyber crystal is located.")
-    print("You should be able to use the tool you coded to find the coordinates.")
-    input("When you get the information, press Enter...")
-    print("What are the coordinates of the Kyber crystal?")
-    coordinates = input("Coordinates: ")
-    if coordinates == random_coordinates:
-        print("\nMission Success!\n")
-        print(f"You have located the Kyber crystal on {random_planet} at coordinates {random_coordinates}.")
-        print("You quickly transmit the coordinates to the Rebel fleet. The strike team is scrambled and bombers are dispatched.")
-        print("\n--- Rebel Bomber Channel ---")
-        time.sleep(1)
-        print("Cobalt Leader: All wings report in.")
-        time.sleep(1)
-        print("Cobalt Two: Cobalt Two standing by.")
-        time.sleep(1)
-        print("Cobalt Three: Cobalt Three standing by.")
-        time.sleep(1)
-        print("Cobalt Leader: Target locked. Beginning attack run on Imperial facility.")
-        time.sleep(2)
-        print("Cobalt Two: Anti-air batteries are active, evasive maneuvers!")
-        time.sleep(1)
-        print("Cobalt Leader: Stay on target...")
-        time.sleep(1)
-        print("Cobalt Three: Bombs away!")
-        time.sleep(2)
-        # 0.5% chance of failure
-        if pyrandom.random() < 0.005:
-            print("Cobalt Leader: Direct hit... wait, the Kyber crystal is still intact! The Empire's shields held. We'll have to try again another day.")
-            print("Mission failed. The Kyber crystal remains in Imperial hands... for now.")
-            return
-        print("Cobalt Leader: Direct hit! The Kyber crystal is shattering—massive energy surge detected!")
-        time.sleep(1)
-        print("Cobalt Two: The entire facility is going up! That's one less superweapon for the Empire.")
-        time.sleep(1)
-        print("Cobalt Leader: Mission accomplished. Returning to base. The galaxy owes you one, agent.")
-        print("\n--- Transmission Ended ---\n")
-        print("The Rebellion celebrates your victory! The Empire's plans are in ruins, and the galaxy is safer thanks to your skill and courage.")
-        print("\nCongratulations! You have successfully completed the Kyber crystal mission and struck a major blow against the Empire.")
-    else:
-        print("Incorrect coordinates. The Kyber crystal remains hidden... for now.")
         return
 
 story()

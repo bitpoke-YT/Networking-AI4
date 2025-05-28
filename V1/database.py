@@ -29,7 +29,7 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS User (
-            UserID INTEGER PRIMARY KEY,
+            UserID INTEGER NOT NULL,
             UserName TEXT UNIQUE,
             Password TEXT
         )''')
