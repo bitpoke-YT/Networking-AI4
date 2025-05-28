@@ -20,9 +20,9 @@ Example:
 import requests
 
 url = "https://example.com"
-cookies = {"sessionid": "123456", "user": "micah"}
+headers = {"Cookie": f"passid=123"}
 
-response = requests.get(url, cookies=cookies)
+response = requests.get(url, headers=headers)
 print(response.text)
 ```
 This sends a GET request to the server with the specified cookies.
@@ -35,8 +35,8 @@ Example:
 import requests
 
 url = "https://example.com/login"
-data = {"username": "micah", "password": "hunter2"}
-response = requests.post(url, data=data)
+headers = {"Cookie": f"passid=123"}
+response = requests.post(url, headers=headers)
 print(response.text)
 ```
 
@@ -117,8 +117,8 @@ url = "https://example.com"
 cookie_values = ["abc123", "def456", "ghi789"]
 
 for value in cookie_values:
-    cookies = {"sessionid": value}
-    response = requests.get(url, cookies=cookies)
+    headers = {"Cookie": f"passid={value}"}
+    response = requests.get(url, headers=headers)
     if "Welcome back" in response.text:
         print(f"Phrase found with cookie {value}!")
     else:
@@ -134,9 +134,8 @@ import requests
 
 session = requests.Session()
 url = "https://example.com"
-cookies = {"sessionid": "persistent123"}
-
-response = session.get(url, cookies=cookies)
+    headers = {"Cookie": f"passid=gesgs"}
+    response = requests.get(url, headers=headers)
 print(response.text)
 ```
 
@@ -152,8 +151,8 @@ url = "https://example.com"
 cookie_values = ["abc123", "def456", "ghi789", "jkl012", "mno345"]
 
 def check_cookie(value):
-    cookies = {"sessionid": value}
-    response = requests.get(url, cookies=cookies)
+    headers = {"Cookie": f"passid={value}"}
+    response = requests.get(url, headers=headers)
     if "Welcome back" in response.text:
         print(f"✅ Phrase found with cookie {value}!")
     else:
