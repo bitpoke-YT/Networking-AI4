@@ -57,7 +57,7 @@ def logout():
     resp.set_cookie('userid', '', expires=0)
     return resp
 
-@app.route("/tasks", methods=["GET", "POST", "PUT"])
+@app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
 def tasks():
     if request.cookies.get('sessionID', 0) == 0:
         return redirect(url_for('login'))
@@ -113,6 +113,15 @@ def tasks():
             '__completed': False
         }
         return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
+    
+    if request.method == "DELETE":
+        taskID request.args.get("TaskID")
+        if taskID is not None or < 0:
+            db.deleteTask(taskID)
+            return jsonify({'message': 'Task deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Did not get valid task ID In args.'}), 400
+
 
     return redirect(url_for('mainPage'))
 
@@ -132,4 +141,4 @@ def taskComplete():
     return redirect(url_for('mainPage'))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=4333)
+    app.run(debug=True, host='0.0.0.0', port=4633)

@@ -223,7 +223,7 @@ This intel is critical to launching a ground assault on the weapon supply depot 
     print("We have provided you with the resources you will need in the Mission 4 document.")
     print("May the Force be with you!")
     input_with_hints(
-        "When you breach the encryption, press Enter...", 600, [
+        "When you breach the encryption, press Enter...", 720, [
             "Hint: Try exploring how data is transferred and stored in modern web apps.",
             "Hint: Look for patterns or keywords in encoded or obfuscated data fields.",
             "Hint: Sometimes, what looks like gibberish is just encoded—think about common encoding schemes.",
