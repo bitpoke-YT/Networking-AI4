@@ -1,10 +1,7 @@
 import requests
 import threading
-import base64
-import time
-import random
 
-url = 'http://localhost:4333/tasks'
+url = 'http://localhost:3333/tasks'
 
 def check_task(session_id, phrase):
     headers = {'Cookie': f'sessionID={session_id}'}
@@ -13,29 +10,6 @@ def check_task(session_id, phrase):
         return response.text
     else:
         return None
-
-
-def decode_if_base64(s):
-    try:
-        return base64.b64decode(s).decode("utf-8")
-    except Exception:
-        return s
-
-def check_task_encoded(session_id, phrase):
-    import json
-    url = 'http://localhost:4333/tasks?completed=false'
-    headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
-    try:
-        tasks = response.json().get('tasks', [])
-    except Exception:
-        return None
-
-    for task in tasks:
-        description = decode_if_base64(task.get('description', ''))
-        if phrase.lower() in description.lower():
-            return f"ID: {task.get('taskid', '')}\n Description: {description}\n"
-    return None
 
 def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
     if end < start:
@@ -47,7 +21,7 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
             return  # Stop if another thread found the result
         print(f"[Thread {start}-{end-1}] Checking ID: {id}")
         try:
-            response = check_task_encoded(id, phrase)
+            response = check_task(id, phrase)
         except requests.exceptions.RequestException as e:
             print(f"Error: {e}")
         if response is not None:
@@ -58,8 +32,6 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
                 stop_event.set()
             return
         id += 1
-        # time.sleep(random.uniform(0.001, 0.1))  # Sleep to avoid overwhelming the server
-
     print(f"[Thread {start}-{end-1}] Finished without finding phrase.")
 
 def multThreadedFindTask(phrase, max_id=500, batch_size=20):
@@ -74,7 +46,6 @@ def multThreadedFindTask(phrase, max_id=500, batch_size=20):
         )
         threads.append(thread)
         thread.start()
-        # time.sleep(random.uniform(0.01, 0.4))  # Sleep to avoid overwhelming the server
     for thread in threads:
         thread.join()
     return result_holder.get('result', "Phrase not found in any task.")

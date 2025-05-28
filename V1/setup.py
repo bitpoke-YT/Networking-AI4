@@ -98,11 +98,10 @@ We need you to hack into his account and get the location of a secret base.""")
 input("Press Enter to continue...")
 print("We have provided you with the resources you will need in the Mission 1 document.")
 print("Good luck, and may the Force be with you!")
-input_with_hints("When you are ready to start the mission, press enter...", 15, [
+input_with_hints("When you get the Planet with the Secret Base press enter...", 15, [
     "Hint: Try Creating Multiple Acounts.",
     "Hint: Read the Task Description Carefully."
 ])
-input("When you get the Planet with the Secret Base press enter...")
 print("What planet is the secret base on?")
 Planet = input("Planet: ")
 if Planet.lower() == random_planet.lower():
