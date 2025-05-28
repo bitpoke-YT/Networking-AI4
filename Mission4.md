@@ -1,20 +1,14 @@
-
-
 # Understanding Encryption in Python: Including Insecure Methods and Base64 Encoding 🔐
 
 ## Introduction
 Encryption is a critical tool for securing data, but not all methods are created equal. This guide explores **insecure encryption practices**, **Base64 encoding**, and **secure encryption techniques** in Python. Whether you're learning how to encode data, experimenting with weak algorithms, or implementing modern cryptography, this tutorial will help you understand the differences and avoid common pitfalls.
 
----
 
 ## What is Encryption? 🔐
 **Encryption** transforms readable data (plaintext) into an unreadable format (ciphertext) using algorithms and keys. There are two main types:
 - **Symmetric Encryption**: Same key for encryption/decryption (e.g., AES).
 - **Asymmetric Encryption**: Public/private key pairs (e.g., RSA).
 
-**Base64** is not encryption—it’s **encoding**! It converts binary data to ASCII characters for safe transmission but offers no security.
-
----
 
 ## Base64 Encoding/Decoding 📊
 Use `base64` for encoding binary data (e.g., images, files) into text.
@@ -32,7 +26,7 @@ decoded = base64.b64decode(encoded).decode("utf-8")
 print("Decoded:", decoded)
 ```
 
----
+
 
 ## Insecure Encryption Methods ⚠️
 Avoid these in production! They’re vulnerable to attacks.
@@ -70,7 +64,7 @@ ciphertext = cipher.encrypt(pad(data, AES.block_size))
 print("ECB Encrypted:", ciphertext.hex())
 ```
 
----
+
 
 ## Secure Encryption with AES 🛡️
 Use **AES (Advanced Encryption Standard)** with proper modes (CBC, GCM) and key derivation.
@@ -100,7 +94,7 @@ decrypted = unpad(cipher.decrypt(ciphertext), AES.block_size)
 print("Decrypted:", decrypted.decode("utf-8"))
 ```
 
----
+
 
 ## Secure Password Hashing 🔐
 Use **bcrypt** or **Argon2** for password storage.
@@ -124,7 +118,7 @@ if bcrypt.checkpw(password, hashed):
     print("Password matches!")
 ```
 
----
+
 
 ## Best Practices 🧠
 1. **Never use MD5, SHA1, or ECB mode**.
@@ -133,9 +127,8 @@ if bcrypt.checkpw(password, hashed):
 4. Use **salting** and **key derivation functions** (PBKDF2, bcrypt).
 5. Avoid rolling your own crypto—use libraries like `cryptography` or `PyCryptodome`.
 
----
+
 
 ## Conclusion 🧾
 Understanding encryption is vital for secure software development. While Base64 encoding and weak algorithms like XOR or ECB mode are useful for learning, always use **modern cryptographic libraries** in production. Stay secure! 🔒
 
----

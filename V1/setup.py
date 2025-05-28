@@ -88,12 +88,12 @@ random_data = random.choice(data)
 random_planet = random_data['plant']
 random_description = random_data['description']
 
-create_task(random.randint(3,17), {'title': 'Inspect Secret Base', 'description': random_description})
+create_task(random.randint(1,10), {'title': 'Inspect Secret Base', 'description': random_description})
 
 print("http://localhost:1111")
 webbrowser.open_new('http://localhost:1111')
 print("""Your goal is to hack into this task management app used by the Galactic Empire.
-Our sources say that Darth Vader was part of the first 20 users of the app.
+Our sources say that Darth Vader was part of the first 10 users of the app.
 We need you to hack into his account and get the location of a secret base.""")
 input("Press Enter to continue...")
 print("We have provided you with the resources you will need in the Mission 1 document.")
