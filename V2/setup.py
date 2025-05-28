@@ -66,9 +66,6 @@ def special_setup_account(num_tasks, task_data_main):
     password = generate_password()
 
     session_id = create_account(username, password)
-
-    print(session_id)
-
     if session_id != None:
         if create_task(session_id, task_data_main):
             ...
@@ -155,63 +152,70 @@ def setup():
         'title': 'EMERGANCY Medevac',
         'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
     })
-    story(random_planet)
+    story(random_planet, random_coordinates)
 
-def story(random_planet):
-    print("http://localhost:4333")
-    print(f"""
-Your mission is to infiltrate the Empire's encrypted troop management system.
-Intelligence indicates {random_planet}'s garrison contains critical data about
-their defenses - specifically the location of a secret weapons depot containing 
-prototype blasters for the Emperor's elite stormtroopers.
-""")
+def story(random_planet, random_coordinates):
+
+    print("http://localhost:3333")
+    print(
+        """Your mission is to hack into this task management app used by the Galactic Empire.
+Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
+We don't know which account has the information, so you'll need to figure out a way to automate the process of hacking into accounts, retrieving, and checking the information.
+Your objective: hack into the right account and discover the planet where the Kyber crystal is hidden."""
+    )
     input("Press Enter to continue...")
-    print("We have provided you with the resources you will need in the Mission 4 document.")
-    print("May the Force be with you!")
-    input("When you breach the encryption, press Enter...")
-    print("What is the TROOP COUNT on the surface of " + random_planet + "?")
-    
-    Troop = input("Troop Count: ")
-    if Troop.lower() == random_troop.lower():
-        print("Signal Boost: The first encryption layer collapses. Data streams reveal...")
+    print("We have provided you with the resources you will need in the Mission 2 document.")
+    print("Good luck, and may the Force be with you!")
+    input("When you get the information, press Enter...")
+    print("On which planet is the Kyber crystal hidden?")
+    Planet = input("Planet: ")
+    if Planet.lower() == random_planet.lower():
+        print("Good Job you have found the planet where the Kyber crystal is hidden.")
     else:
-        print("Security Alert: Wrong decryption key! Purge logs and retreat...")
+        print("Incorrect planet. The Kyber crystal remains hidden... for now.")
         return
-    
-    input("Press Enter to continue decrypting the second layer...")
-    print(f"""
-The raw numbers reveal patterns - this isn't just troop data. 
-The weapons depot's location is encoded in the transmission!
-Where is the secret weapons facility hidden?""")
-
-    Coordinates = input("Depot Coordinates: ")
-    if Coordinates == random_coordinates:
-        print("Breakthrough: The depot's location pulses in your data stream.")
+    print(f"We are unable to find the coordinates of {random_planet}.")
+    input("Press Enter to continue...")
+    print(f"We need you to find the coordinates on {random_planet} where the Kyber crystal is located.")
+    print("You should be able to use the tool you coded to find the coordinates.")
+    input("When you get the information, press Enter...")
+    print("What are the coordinates of the Kyber crystal?")
+    coordinates = input("Coordinates: ")
+    if coordinates == random_coordinates:
+        print("\nMission Success!\n")
+        print(f"You have located the Kyber crystal on {random_planet} at coordinates {random_coordinates}.")
+        print("You quickly transmit the coordinates to the Rebel fleet. The strike team is scrambled and bombers are dispatched.")
+        print("\n--- Rebel Bomber Channel ---")
+        time.sleep(1)
+        print("Cobalt Leader: All wings report in.")
+        time.sleep(1)
+        print("Cobalt Two: Cobalt Two standing by.")
+        time.sleep(1)
+        print("Cobalt Three: Cobalt Three standing by.")
+        time.sleep(1)
+        print("Cobalt Leader: Target locked. Beginning attack run on Imperial facility.")
+        time.sleep(2)
+        print("Cobalt Two: Anti-air batteries are active, evasive maneuvers!")
+        time.sleep(1)
+        print("Cobalt Leader: Stay on target...")
+        time.sleep(1)
+        print("Cobalt Three: Bombs away!")
+        time.sleep(2)
+        # 0.5% chance of failure
+        if pyrandom.random() < 0.005:
+            print("Cobalt Leader: Direct hit... wait, the Kyber crystal is still intact! The Empire's shields held. We'll have to try again another day.")
+            print("Mission failed. The Kyber crystal remains in Imperial hands... for now.")
+            return
+        print("Cobalt Leader: Direct hit! The Kyber crystal is shattering—massive energy surge detected!")
+        time.sleep(1)
+        print("Cobalt Two: The entire facility is going up! That's one less superweapon for the Empire.")
+        time.sleep(1)
+        print("Cobalt Leader: Mission accomplished. Returning to base. The galaxy owes you one, agent.")
+        print("\n--- Transmission Ended ---\n")
+        print("The Rebellion celebrates your victory! The Empire's plans are in ruins, and the galaxy is safer thanks to your skill and courage.")
+        print("\nCongratulations! You have successfully completed the Kyber crystal mission and struck a major blow against the Empire.")
     else:
-        print("Counter-Intrusion: Imperial firewalls are closing in...")
+        print("Incorrect coordinates. The Kyber crystal remains hidden... for now.")
         return
-
-    print("\n--- Rebel Ground Team Channel ---")
-    time.sleep(1)
-    print("Serra Leader: We've got the coordinates - moving to extraction point.")
-    time.sleep(1.5)
-    print("Serra Two: Imperial patrols detected - do we proceed with night infiltration?")
-    time.sleep(1.5)
-    print("Serra Leader: Hold formation. We're going in under cover of darkness.")
-    time.sleep(2)
-    
-    if pyrandom.random() < 0.005:
-        print("Serra Three: Blast! They've rerouted patrols - we need a new plan!")
-        print("The Empire's security adapts to your tactics. This victory will require more cunning...")
-        return
-    
-    print("Serra Leader: Breaching outer perimeter - thermite charges set!")
-    time.sleep(1)
-    print("Serra Two: Direct breach! Weapons cache secured - loading proton packs now!")
-    time.sleep(1.5)
-    print("Serra Leader: Mission accomplished - transmitting weapon schematics to High Command!")
-    print("\n--- Transmission Secure ---")
-    print("The Empire's secrets now serve the Rebel cause. Your digital sabotage")
-    print("has delivered prototype weapons that will tip the balance in future battles...")
 
 setup()
