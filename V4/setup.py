@@ -224,11 +224,15 @@ This intel is critical to launching a ground assault on the weapon supply depot 
     input("Press Enter to continue...")
     print("We have provided you with the resources you will need in the Mission 4 document.")
     print("May the Force be with you!")
-    input_with_hints("When you breach the encryption, press Enter...", 600, [
-        "Hint: Make sure you don't get rate limited.",
-        "Hint: Look for Troops as it occurs in a few titles.",
-        "Hint: They are most likly using base64.",
-    ])
+    input_with_hints(
+        "When you breach the encryption, press Enter...", 600, [
+            "Hint: Try exploring how data is transferred and stored in modern web apps.",
+            "Hint: Look for patterns or keywords in encoded or obfuscated data fields.",
+            "Hint: Sometimes, what looks like gibberish is just encoded—think about common encoding schemes.",
+            "Hint: Automation and parallel processing can help you search faster!",
+            "Hint: The Empire Might be using base64 encoding for their data.",  
+        ]
+    )
     print(f"What is the TROOP COUNT on the surface of {random_planet}?")
     
     Troop = input("Troop Count: ")
