@@ -37,8 +37,8 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS TaskUser (
-            UserID INTEGER NOT NULL,
-            TaskID INTEGER NOT NULL
+            UserID INTEGER,
+            TaskID INTEGER
         )''')
 
         self.__server.commit()
@@ -79,7 +79,6 @@ class database():
 
 
     # Get Tasks
-
     def getCompleatedTasks(self, userID):
         tasksDB = self.__server.execute(f"SELECT Tasks.Title, Tasks.Description, Tasks.DueDate, Tasks.TaskID, Tasks.Compleated FROM TaskUser LEFT JOIN Tasks ON TaskUser.TaskID = Tasks.TaskID WHERE TaskUser.UserID = {userID} AND Tasks.Compleated = 1")
         tasks = []
@@ -108,7 +107,6 @@ class database():
             except Exception as x:
                 print(x)
         return tasks
-
     def completeTask(self, taskID):
         cursor = self.__server.cursor()
         cursor.execute("UPDATE Tasks SET Compleated = 1 WHERE TaskID = ?", (taskID,))
