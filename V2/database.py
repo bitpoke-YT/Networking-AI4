@@ -37,8 +37,8 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS TaskUser (
-            UserID INTEGER,
-            TaskID INTEGER
+            UserID INTEGER NOT NULL,
+            TaskID INTEGER NOT NULL
         )''')
 
         self.__server.commit()
@@ -80,47 +80,33 @@ class database():
 
     # Get Tasks
 
-    # Completed is a Int
-    def getTask(self, taskID, completed):
-        tasksDB = self.__server.execute(f"SELECT * FROM Tasks WHERE TaskID ='{taskID}' AND Compleated ={int(completed)}")
-        taskClass = None
-        for taskDB in tasksDB:
-            taskClass = task.Task(taskDB[1], taskDB[2], datetime.datetime.fromtimestamp(taskDB[3]), taskID,(taskDB[4] >= 1))
-        return taskClass
-
     def getCompleatedTasks(self, userID):
-        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasksDB = self.__server.execute(f"SELECT Tasks.Title, Tasks.Description, Tasks.DueDate, Tasks.TaskID, Tasks.Compleated FROM TaskUser LEFT JOIN Tasks ON TaskUser.TaskID = Tasks.TaskID WHERE TaskUser.UserID = {userID} AND Tasks.Compleated = 1")
         tasks = []
-        for taskID in TaskDB:
-            # Getting Non compleated 
-            task = self.getTask(taskID[0], True)
-            if task != None:
-                tasks.append(task)
+        for taskDB in tasksDB:
+            try:
+                tasks.append(task.Task(taskDB[0], taskDB[1], datetime.datetime.fromtimestamp(taskDB[2]), taskDB[3],(taskDB[4] >= 1)))
+            except Exception as x:
+                print(x)
         return tasks
     
     def getCurrentTasks(self, userID):
-        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasksDB = self.__server.execute(f"SELECT Tasks.Title, Tasks.Description, Tasks.DueDate, Tasks.TaskID, Tasks.Compleated FROM TaskUser LEFT JOIN Tasks ON TaskUser.TaskID = Tasks.TaskID WHERE TaskUser.UserID = {userID} AND Tasks.Compleated = 0")
         tasks = []
-        for taskID in TaskDB:
-            # Getting Non compleated 
-            task = self.getTask(taskID[0], False)
-            if task != None:
-                tasks.append(task)
+        for taskDB in tasksDB:
+            try:
+                tasks.append(task.Task(taskDB[0], taskDB[1], datetime.datetime.fromtimestamp(taskDB[2]), taskDB[3],(taskDB[4] >= 1)))
+            except Exception as x:
+                print(x)
         return tasks
-
     def getAllTasks(self, userID):
-        TaskDB = self.__server.execute(f"SELECT TaskID FROM TaskUser WHERE UserID ='{userID}'")
+        tasksDB = self.__server.execute(f"SELECT Tasks.Title, Tasks.Description, Tasks.DueDate, Tasks.TaskID, Tasks.Compleated FROM TaskUser LEFT JOIN Tasks ON TaskUser.TaskID = Tasks.TaskID WHERE TaskUser.UserID = {userID}")
         tasks = []
-        for taskID in TaskDB:
-            # Getting Non compleated 
-            task = self.getTask(taskID[0], False)
-            if task != None:
-                tasks.append(task)
-        for taskID in TaskDB:
-            # Getting Non compleated 
-            task = self.getTask(taskID[0], True)
-            if task != None:
-                tasks.append(task)
+        for taskDB in tasksDB:
+            try:
+                tasks.append(task.Task(taskDB[0], taskDB[1], datetime.datetime.fromtimestamp(taskDB[2]), taskDB[3],(taskDB[4] >= 1)))
+            except Exception as x:
+                print(x)
         return tasks
 
     def completeTask(self, taskID):
