@@ -6,7 +6,7 @@ import random
 
 class database():
     def __init__(self):
-        path = os.path.expanduser('~/Documents/Networking-AI4/V4')
+        path = os.path.expanduser('~/Documents/Networking-AI4/V5')
         if not os.path.exists(path):
             os.makedirs(path)
         self.__server = sqlite3.connect(f"{path}/Task.db")

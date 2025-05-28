@@ -64,7 +64,7 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-def special_setup_account(num_tasks, task_data_main):
+def special_setup_account(num_tasks, task_data):
     # Generate random username and password
     username = generate_username()
     password = generate_password()
@@ -72,10 +72,11 @@ def special_setup_account(num_tasks, task_data_main):
     session_id = create_account(username, password)
 
     if session_id != None:
-        if create_task(session_id, task_data_main):
-            ...
-        else:
-            raise Exception(f'Failed to create main task: {task_data_main["title"]}')
+        for task in task_data:
+            if create_task(session_id, task):
+                ...
+            else:
+                raise Exception(f'Failed to create main task: {task["title"]}')
         for i in range(num_tasks):
             task_data = random.choice(tasks)
             if create_task(session_id, task_data):
@@ -84,6 +85,7 @@ def special_setup_account(num_tasks, task_data_main):
                 print(f'Failed to create task: {task_data["title"]}')
     else:
         raise Exception(f'Failed to create account for username: {username}')
+
 
 def setup():
     try:
@@ -105,86 +107,6 @@ def setup():
         thread.join()
 
     print("Working on special setup...")
-
-    with open('setup/planets.json') as f:
-        data = json.load(f)
-
-    random_data = random.choice(data)
-    random_planet = random_data['plant']
-    random_description = random_data['description']
-
-    # Multi-thread special_setup_account calls
-    special_threads = []
-
-    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-        'title': 'Inspect Base',
-        'description': random_description
-    })))
-
-    with open('setup/KyberCrystal.json') as f:
-        data = json.load(f)
-
-    random_data = random.choice(data)
-    random_planet = random_data['plant']
-    random_description = random_data['description']
-
-    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-        'title': 'Get Kyber crystal update',
-        'description': random_description
-    })))
-
-    plumming = []
-    for i in range(random.randint(1, 5)):
-        plumming.append(random.choice(data)['plant'])
-    plumming.append(random_planet)
-    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-        'title': 'Fix plumming',
-        'description': f"The plumming is broken on {plumming}."
-    })))
-
-    fooddrop = []
-    for i in range(random.randint(1, 10)):
-        fooddrop.append(random.choice(data)['plant'])
-    for i in fooddrop:
-        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-            'title': 'Food drop',
-            'description': f"Deliver food to {i}."
-        })))
-
-    medicine = []
-    for i in range(random.randint(1, 10)):
-        medicine.append(random.choice(data)['plant'])
-    for i in medicine:
-        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-            'title': 'Deliver medicine',
-            'description': f"Deliver medicine to {i}."
-        })))
-
-    random_coordinates = f"[{round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-1000, 1000), 3)}, {round(random.uniform(-3, 3), 3)}]"
-
-    special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-        'title': 'EMERGANCY Medevac',
-        'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
-    })))
-
-    with open('setup/Troop.json') as f:
-        data = json.load(f)
-
-    for n in range(1, 30):
-        # Multi Thread
-        random_data = random.choice(data)
-        random_title = random_data['title']
-        random_description = random_data['description']
-        random_planet = random_data['planet']
-        random_troop = random_data['troopamount']
-
-        random_title_encoded = base64.b64encode(random_title.encode("utf-8")).decode("utf-8")
-        random_description_encoded = base64.b64encode(random_description.encode("utf-8")).decode("utf-8")
-
-        special_threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 3), {
-            'title': random_title_encoded,
-            'description': random_description_encoded
-        })))
 
     random_data = random.choice(data)
     random_title = random_data['title']

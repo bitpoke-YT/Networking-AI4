@@ -1,0 +1,247 @@
+[
+  {
+    "title": "Conduct a fleet readiness inspection",
+    "description": "Travel to Hoth to inspect the fleet's preparedness for upcoming operations.",
+    "planet": "Hoth"
+  },
+  {
+    "title": "Review construction protocols",
+    "description": "Visit Endor to review the latest construction protocols with local engineers.",
+    "planet": "Endor"
+  },
+  {
+    "title": "Host a diplomatic summit",
+    "description": "Arrive on Naboo to host a summit with planetary officials.",
+    "planet": "Naboo"
+  },
+  {
+    "title": "Evaluate security measures",
+    "description": "Go to Lothal to evaluate the effectiveness of current security measures.",
+    "planet": "Lothal"
+  },
+  {
+    "title": "Oversee intelligence briefing",
+    "description": "Travel to Tatooine to oversee an intelligence briefing with local commanders.",
+    "planet": "Tatooine"
+  },
+  {
+    "title": "Audit mining operations",
+    "description": "Visit Kessel to audit the efficiency of mining operations.",
+    "planet": "Kessel"
+  },
+  {
+    "title": "Supervise prisoner transfer",
+    "description": "Go to Mustafar to supervise the transfer of high-profile prisoners.",
+    "planet": "Mustafar"
+  },
+  {
+    "title": "Inspect shipyard facilities",
+    "description": "Travel to Corellia to inspect the maintenance of shipyard facilities.",
+    "planet": "Corellia"
+  },
+  {
+    "title": "Attend a tactical planning session",
+    "description": "Arrive on Coruscant to attend a high-level tactical planning session.",
+    "planet": "Coruscant"
+  },
+  {
+    "title": "Investigate data breach",
+    "description": "Go to Scarif to investigate a recent data breach in the archives.",
+    "planet": "Scarif"
+  },
+  {
+    "title": "Assess blockade effectiveness",
+    "description": "Travel to Mon Cala to assess the effectiveness of the current blockade.",
+    "planet": "Mon Cala"
+  },
+  {
+    "title": "Recruit new operatives",
+    "description": "Visit Nar Shaddaa to recruit new operatives for special missions.",
+    "planet": "Nar Shaddaa"
+  },
+  {
+    "title": "Evaluate outpost logistics",
+    "description": "Go to Dantooine to evaluate logistics at the remote outpost.",
+    "planet": "Dantooine"
+  },
+  {
+    "title": "Observe training exercises",
+    "description": "Travel to Kamino to observe advanced training exercises.",
+    "planet": "Kamino"
+  },
+  {
+    "title": "Mediate local disputes",
+    "description": "Arrive on Jedha to mediate disputes among local factions.",
+    "planet": "Jedha"
+  },
+  {
+    "title": "Facilitate leadership transition",
+    "description": "Go to Bespin to facilitate a smooth transition of local leadership.",
+    "planet": "Bespin"
+  },
+  {
+    "title": "Monitor production quotas",
+    "description": "Visit Geonosis to monitor the fulfillment of production quotas.",
+    "planet": "Geonosis"
+  },
+  {
+    "title": "Lead a reconnaissance mission",
+    "description": "Travel to Dagobah to lead a reconnaissance mission in uncharted territory.",
+    "planet": "Dagobah"
+  },
+  {
+    "title": "Survey archaeological sites",
+    "description": "Go to Moraband to survey newly discovered archaeological sites.",
+    "planet": "Moraband"
+  },
+  {
+    "title": "Review law enforcement practices",
+    "description": "Visit Mandalore to review local law enforcement practices.",
+    "planet": "Mandalore"
+  },
+  {
+    "title": "Represent command at ceremony",
+    "description": "Travel to Alderaan to represent command at a formal ceremony.",
+    "planet": "Alderaan"
+  },
+  {
+    "title": "Oversee weapons demonstration",
+    "description": "Go to Eadu to oversee a demonstration of new weapons technology.",
+    "planet": "Eadu"
+  },
+  {
+    "title": "Coordinate relief efforts",
+    "description": "Arrive on Ryloth to coordinate relief efforts after a natural disaster.",
+    "planet": "Ryloth"
+  },
+  {
+    "title": "Inspect communications array",
+    "description": "Travel to Sullust to inspect the planetary communications array.",
+    "planet": "Sullust"
+  },
+  {
+    "title": "Investigate trade irregularities",
+    "description": "Go to Ord Mantell to investigate irregularities in trade shipments.",
+    "planet": "Ord Mantell"
+  },
+  {
+    "title": "Review starfighter upgrades",
+    "description": "Visit Fondor to review the latest upgrades to starfighter models.",
+    "planet": "Fondor"
+  },
+  {
+    "title": "Conduct leadership workshop",
+    "description": "Travel to Yavin IV to conduct a workshop for emerging leaders.",
+    "planet": "Yavin IV"
+  },
+  {
+    "title": "Negotiate trade agreements",
+    "description": "Go to Nal Hutta to negotiate new trade agreements.",
+    "planet": "Nal Hutta"
+  },
+  {
+    "title": "Research force phenomena",
+    "description": "Visit Lothal to research unexplained force phenomena.",
+    "planet": "Lothal"
+  },
+  {
+    "title": "Supervise droid deployment",
+    "description": "Travel to Mygeeto to supervise the deployment of new droid units.",
+    "planet": "Mygeeto"
+  },
+  {
+    "title": "Assess planetary loyalty",
+    "description": "Go to Shili to assess the loyalty of local government officials.",
+    "planet": "Shili"
+  },
+  {
+    "title": "Participate in cultural exchange",
+    "description": "Visit Exegol to participate in a cultural exchange program.",
+    "planet": "Exegol"
+  },
+  {
+    "title": "Inspect detention facilities",
+    "description": "Travel to Wobani to inspect the condition of detention facilities.",
+    "planet": "Wobani"
+  },
+  {
+    "title": "Suppress piracy operations",
+    "description": "Go to Florrum to suppress ongoing piracy operations.",
+    "planet": "Florrum"
+  },
+  {
+    "title": "Scout for resource deposits",
+    "description": "Visit Atollon to scout for new resource deposits.",
+    "planet": "Atollon"
+  },
+  {
+    "title": "Secure fuel contracts",
+    "description": "Travel to Abafar to secure long-term fuel contracts.",
+    "planet": "Abafar"
+  },
+  {
+    "title": "Meet with local dignitaries",
+    "description": "Go to Serenno to meet with local dignitaries and discuss policy.",
+    "planet": "Serenno"
+  },
+  {
+    "title": "Review medical research",
+    "description": "Visit Polis Massa to review the latest medical research findings.",
+    "planet": "Polis Massa"
+  },
+  {
+    "title": "Oversee environmental restoration",
+    "description": "Travel to Lah'mu to oversee environmental restoration projects.",
+    "planet": "Lah'mu"
+  },
+  {
+    "title": "Apprehend a fugitive",
+    "description": "Go to Socorro to apprehend a fugitive wanted for questioning.",
+    "planet": "Socorro"
+  },
+  {
+    "title": "Catalog ancient artifacts",
+    "description": "Visit Ilum to catalog recently unearthed ancient artifacts.",
+    "planet": "Ilum"
+  },
+  {
+    "title": "Lead a training seminar",
+    "description": "Travel to Crait to lead a seminar for new recruits.",
+    "planet": "Crait"
+  },
+  {
+    "title": "Inspect shipyard expansion",
+    "description": "Go to Anaxes to inspect the progress of shipyard expansion.",
+    "planet": "Anaxes"
+  },
+  {
+    "title": "Mediate peace talks",
+    "description": "Visit Chandrila to mediate ongoing peace talks.",
+    "planet": "Chandrila"
+  },
+  {
+    "title": "Evaluate mining efficiency",
+    "description": "Travel to Subterrel to evaluate the efficiency of mining operations.",
+    "planet": "Subterrel"
+  },
+  {
+    "title": "Track a suspected spy",
+    "description": "Go to Bothawui to track the movements of a suspected spy.",
+    "planet": "Bothawui"
+  },
+  {
+    "title": "Supervise droid maintenance",
+    "description": "Visit Mechis III to supervise the maintenance of droid units.",
+    "planet": "Mechis III"
+  },
+  {
+    "title": "Study force anomalies",
+    "description": "Travel to Mortis to study unique force anomalies.",
+    "planet": "Mortis"
+  },
+  {
+    "title": "Coordinate counter-insurgency",
+    "description": "Go to Onderon to coordinate counter-insurgency operations.",
+    "planet": "Onderon"
+  }
+]
