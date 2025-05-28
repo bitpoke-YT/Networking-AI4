@@ -8,7 +8,7 @@ class database():
         path = os.path.expanduser('~/Documents/Networking-AI4/V1')
         if not os.path.exists(path):
             os.makedirs(path)
-        self.__server = sqlite3.connect(f"{path}/Task.db", check_same_thread=False)
+        self.__server = sqlite3.connect(f"{path}/Task.db")
         self.__server.execute('PRAGMA journal_mode=WAL;')  # Enable WAL mode
         self.__server.execute('PRAGMA busy_timeout=5000;') # Wait up to 5 seconds for locks
         self.__setupTable()
@@ -29,7 +29,7 @@ class database():
 
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS User (
-            UserID INTEGER NOT NULL,
+            UserID INTEGER PRIMARY KEY,
             UserName TEXT UNIQUE,
             Password TEXT
         )''')
