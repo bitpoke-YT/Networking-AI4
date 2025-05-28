@@ -155,8 +155,9 @@ def setup():
         'title': 'EMERGANCY Medevac',
         'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
     })
+    story(random_planet)
 
-def story():
+def story(random_planet):
     print("http://localhost:4333")
     print(f"""
 Your mission is to infiltrate the Empire's encrypted troop management system.
@@ -213,4 +214,4 @@ Where is the secret weapons facility hidden?""")
     print("The Empire's secrets now serve the Rebel cause. Your digital sabotage")
     print("has delivered prototype weapons that will tip the balance in future battles...")
 
-story()
+setup()

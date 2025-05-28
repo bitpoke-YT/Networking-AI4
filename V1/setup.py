@@ -85,7 +85,7 @@ random_data = random.choice(data)
 random_planet = random_data['plant']
 random_description = random_data['description']
 
-create_task(random.randint(3,17), {'title': 'Inspect Base', 'description': random_description})
+create_task(random.randint(3,17), {'title': 'Inspect Secret Base', 'description': random_description})
 
 print("http://localhost:1111")
 print("""Your goal is to hack into this task management app used by the Galactic Empire.
