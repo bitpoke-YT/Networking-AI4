@@ -1,6 +1,5 @@
 
 
-```markdown
 # Understanding Encryption in Python: Including Insecure Methods and Base64 Encoding 🔐
 
 ## Introduction
