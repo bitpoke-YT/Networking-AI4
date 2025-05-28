@@ -1,0 +1,152 @@
+[
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 200 stormtroopers stationed on Coruscant. Verify their armor integrity and compliance with planetary security protocols.",
+    "planet": "Coruscant",
+    "troopamount": "200"
+  },
+  {
+    "title": "Check armor supplies",
+    "description": "Confirm the delivery of armor for 120 sand troopers on Tatooine. Ensure cooling systems in helmets are functional for desert conditions.",
+    "planet": "Tatooine",
+    "troopamount": "120"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 180 snow troopers deployed on Hoth. Test blaster reliability in subzero temperatures and verify thermal camouflage.",
+    "planet": "Hoth",
+    "troopamount": "180"
+  },
+  {
+    "title": "Verify equipment",
+    "description": "Check gear for 90 scout troopers on Endor. Ensure speeder bikes and Ewok communication devices are fully operational.",
+    "planet": "Endor",
+    "troopamount": "90"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 75 lava troopers stationed on Mustafar. Confirm heat-resistant armor and flamethrower functionality.",
+    "planet": "Mustafar",
+    "troopamount": "75"
+  },
+  {
+    "title": "Check weapon caches",
+    "description": "Audit weapons for 300 stormtroopers on Alderaan. Verify concealed armories match deployment manifests.",
+    "planet": "Alderaan",
+    "troopamount": "300"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 250 clone troopers on Kamino. Confirm compatibility of new phase II armor upgrades.",
+    "planet": "Kamino",
+    "troopamount": "250"
+  },
+  {
+    "title": "Verify defensive readiness",
+    "description": "Check defenses for 150 stormtroopers on Geonosis. Ensure trench networks and laser cannons are combat-ready.",
+    "planet": "Geonosis",
+    "troopamount": "150"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 130 shock troopers stationed on Mandalore. Test seismic charges and verify urban combat readiness.",
+    "planet": "Mandalore",
+    "troopamount": "130"
+  },
+  {
+    "title": "Check repulsorlift tech",
+    "description": "Inspect 110 cloud troopers' repulsorlifts on Bespin. Ensure gravity stabilizers are calibrated for high-altitude patrols.",
+    "planet": "Bespin",
+    "troopamount": "110"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 140 stormtroopers on Cularin. Verify comms systems and confirm coordination with local security forces.",
+    "planet": "Cularin",
+    "troopamount": "140"
+  },
+  {
+    "title": "Verify stealth capabilities",
+    "description": "Test stealth gear of 160 reptilian troopers on Nar Kanji. Confirm cloaking devices function in humid jungle environments.",
+    "planet": "Nar Kanji",
+    "troopamount": "160"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 100 stormtroopers on Saleucami. Ensure defensive emplacements and sensor arrays are fully active.",
+    "planet": "Saleucami",
+    "troopamount": "100"
+  },
+  {
+    "title": "Check gravity adaptation",
+    "description": "Inspect 95 gravity troopers on Utapau. Test harnesses and confirm rappelling gear reliability in deep sinkholes.",
+    "planet": "Utapau",
+    "troopamount": "95"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 170 desert troopers on Ryloth. Verify heat resistance of gear and confirm hydration system functionality.",
+    "planet": "Ryloth",
+    "troopamount": "170"
+  },
+  {
+    "title": "Verify aquatic readiness",
+    "description": "Check 220 aquatic troopers' gear on Mon Cala. Ensure waterproofing of blasters and functionality of underwater comms.",
+    "planet": "Mon Cala",
+    "troopamount": "220"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 190 cavern troopers stationed on Sullust. Confirm mining equipment and seismic charges are operational.",
+    "planet": "Sullust",
+    "troopamount": "190"
+  },
+  {
+    "title": "Check jungle camouflage",
+    "description": "Test 125 jungle troopers' gear on Felucia. Confirm bioengineered camouflage effectiveness against local flora.",
+    "planet": "Felucia",
+    "troopamount": "125"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 85 night troopers on Dathomir. Verify infrared suppression and stealth tech reliability in dense forests.",
+    "planet": "Dathomir",
+    "troopamount": "85"
+  },
+  {
+    "title": "Verify elite trooper readiness",
+    "description": "Audit 210 elite troopers on Eriadu. Confirm advanced armor systems and compliance with planetary security protocols.",
+    "planet": "Eriadu",
+    "troopamount": "210"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 135 urban troopers stationed on Lothal. Test sound dampeners and confirm stealth infiltration capabilities.",
+    "planet": "Lothal",
+    "troopamount": "135"
+  },
+  {
+    "title": "Check ceremonial armor",
+    "description": "Verify 105 honor guard troopers' ceremonial gear on Iktotch. Ensure armor polish and parade formations meet standards.",
+    "planet": "Iktotch",
+    "troopamount": "105"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 145 heavy troopers on Malastare. Test electrostaffs and confirm durability of heavy armor plating.",
+    "planet": "Malastare",
+    "troopamount": "145"
+  },
+  {
+    "title": "Verify swamp operations",
+    "description": "Check 115 swamp troopers' gear on Nal Hutta. Confirm mobility in marsh terrain and functionality of mud-resistant optics.",
+    "planet": "Nal Hutta",
+    "troopamount": "115"
+  },
+  {
+    "title": "Inspect troops",
+    "description": "Inspect the 70 guerrilla troopers stationed on Yavin 4. Verify survival gear and confirm stealth protocols for moonbase defense.",
+    "planet": "Yavin 4",
+    "troopamount": "70"
+  }
+]
