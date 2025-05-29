@@ -59,8 +59,8 @@ def logout():
 
 @app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
 def tasks():
-    if request.cookies.get('sessionID', 0) == 0:
-        return redirect(url_for('login'))
+    # if request.cookies.get('sessionID', 0) == 0:
+    #     return redirect(url_for('login'))
     userid = request.cookies.get('sessionID')
     db = database.database()
     if request.method == "GET":
@@ -115,12 +115,14 @@ def tasks():
         return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
     
     if request.method == "DELETE":
-        taskID = request.args.get("TaskID")
-        if taskID is not None and not taskID < 0:
+        taskID = request.args.get("taskID")
+        if taskID is not None and not int(taskID) < 0:
             db.deleteTask(taskID)
+            db.close()
             return jsonify({'message': 'Task deleted successfully'}), 200
         else:
-            return jsonify({'message': 'Did not get valid task ID In args.'}), 400
+            db.close()
+            return jsonify({'message': 'Did not get valid taskID In args.'}), 400
 
 
     return redirect(url_for('mainPage'))

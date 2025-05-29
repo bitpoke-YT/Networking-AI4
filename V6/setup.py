@@ -102,6 +102,9 @@ def check_darth_vader(session_id):
         description = task.get('description', '')
         if 'kids' in description.lower():
             return True
+    url = 'http://localhost:4633/tasks?completed=false'
+    headers = {'Cookie': f'sessionID={session_id}'}
+    response = requests.get(url, headers=headers)
     return False
 
 def setup():
@@ -168,7 +171,22 @@ def setup():
         target=special_setup_account,
         args=(random.randint(1, 2), special_JSON, True, vader_sessions, vader_lock)
     )
+
+    special_JSON = [
+        {
+            'title': 'Do Reaserch on if my kids where born and if so where he is',
+            'description': 'I need to find out if my kids were born and if so where he is.'
+        }
+    ]
+
+    other_sessions = []
+    other_lock = threading.Lock()
+    other_thread = threading.Thread(
+        target=special_setup_account,
+        args=(random.randint(1, 2), special_JSON, True, other_sessions, other_lock)
+    )
     special_threads.append(vader_thread)
+    special_threads.append(other_thread)
 
     # Start all special threads
     for t in special_threads:
@@ -179,20 +197,20 @@ def setup():
     for t in special_threads:
         t.join()
 
-    story(random_planet, vader_sessions[0] if vader_sessions else None)
+    story(random_planet, vader_sessions[0] if vader_sessions else None, other_sessions[0] if other_sessions else None)
 
 
 
-def story(random_planet, darth_vader_session=None):
+def story(random_planet, darth_vader_session=None, other_session=None):
     """Mission briefing function for eliminating child-related tasks in the Empire."""
     print("http://localhost:4633")
     
     print(f"""
-    Your mission: Use your access in the Imperial Task Management System to delete 
-    anything related to kids. If it is Darth Vader's account, we know he is going to 
-    {random_planet}, so you need to find the account he's using and delete any tasks 
-    related to children. We've been told by a spy there's a way to delete, but you'll 
-    need to find the right HTTP request to do so.
+Your mission: Use your access in the Imperial Task Management System to delete 
+anything related to kids. If it is Darth Vader's account, we know he is going to 
+{random_planet}, so you need to find the account he's using and delete any tasks 
+related to children. We've been told by a spy there's a way to delete, but you'll 
+need to find the right HTTP request to do so.
     """)
     
     input("Press Enter to continue...")
@@ -202,9 +220,11 @@ def story(random_planet, darth_vader_session=None):
     
     timer = 1
     darth_vader_kid = True
-    while darth_vader_kid:
-        if darth_vader_session is not None:
+    other_kid = True
+    while darth_vader_kid and other_kid:
+        if darth_vader_session is not None and other_session is not None:
             darth_vader_kid = check_darth_vader(darth_vader_session)
+            other_kid = check_darth_vader(other_session)
         else:
             raise Exception("Darth Vader's session is not available. Please try again later.")
         time.sleep(1)
@@ -212,10 +232,15 @@ def story(random_planet, darth_vader_session=None):
         if timer == 600:
             print("The http request relates to /task")
     
-    print("""
-    Congratulations! You've completed the mission by deleting all tasks related 
-    to Darth Vader's children. The kids are now safe from the Empire's reach.
-    """)
+    if not darth_vader_kid and other_kid:
+        print("""
+Congratulations! You've completed the mission by deleting all tasks related 
+to Darth Vader's children. The kids are now safe from the Empire's reach.
+        """)
+    else:
+        print("""
+Failed! Make sure you only delete kid related things in darth vaders account.
+""")
 
 
 
