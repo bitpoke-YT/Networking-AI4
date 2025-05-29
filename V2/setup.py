@@ -184,6 +184,7 @@ Your objective: hack into the right account and discover the planet where the Ky
     print("You should be able to use the tool you coded to find the coordinates.")
     input("When you get the information, press Enter...")
     print("What are the coordinates of the Kyber crystal?")
+    print("Make sure to incude the square brakes")
     coordinates = input("Coordinates: ")
     if coordinates == random_coordinates:
         print("\nMission Success!\n")
@@ -206,7 +207,7 @@ Your objective: hack into the right account and discover the planet where the Ky
         print("Cobalt Three: Bombs away!")
         time.sleep(random.uniform(0.1, 1))
         # 0.5% chance of failure
-        if pyrandom.random() < 0.005:
+        if random.random() < 0.005:
             print("Cobalt Leader: Direct hit... wait, the Kyber crystal is still intact! The Empire's shields held. We'll have to try again another day.")
             print("Mission failed. The Kyber crystal remains in Imperial hands... for now.")
             return

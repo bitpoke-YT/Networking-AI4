@@ -179,33 +179,43 @@ def setup():
     for t in special_threads:
         t.join()
 
-    story(random_planet, random_troop, vader_sessions[0] if vader_sessions else None)
+    story(random_planet, vader_sessions[0] if vader_sessions else None)
 
 
 
-# Story
-def story(random_planet, random_troop, darth_vader_session=None):
+def story(random_planet, darth_vader_session=None):
+    """Mission briefing function for eliminating child-related tasks in the Empire."""
     print("http://localhost:4633")
+    
     print(f"""
-Your mission: is to use your accsess in the Imperial Task Management System to Delete anthing related to kids if it is darth vaders acount we know that he is going to {random_planet} so you need to find the account that darth vader is using and delete the task that has anything to do with kids. We have been told by one of our spies that that there is a way to delete but you will need to find the right http request to do so.
-""")
+    Your mission: Use your access in the Imperial Task Management System to delete 
+    anything related to kids. If it is Darth Vader's account, we know he is going to 
+    {random_planet}, so you need to find the account he's using and delete any tasks 
+    related to children. We've been told by a spy there's a way to delete, but you'll 
+    need to find the right HTTP request to do so.
+    """)
+    
     input("Press Enter to continue...")
-    print("We have provided you with the resources you will need in the Mission 6 document.")
+    print("We have provided the necessary resources in the Mission 6 document.")
     print("May the Force be with you!")
-    print("We will let you know when you have completed the mission.")
-    time = 1
-    darth_vader_kid = true
+    print("We'll notify you upon mission completion.")
+    
+    timer = 1
+    darth_vader_kid = True
     while darth_vader_kid:
         if darth_vader_session is not None:
             darth_vader_kid = check_darth_vader(darth_vader_session)
         else:
             raise Exception("Darth Vader's session is not available. Please try again later.")
         time.sleep(1)
-        time += 1
-        if time == 600:
+        timer += 1
+        if timer == 600:
             print("The http request relates to /task")
-    print("Congratulations! You have successfully completed the mission by deleting all tasks related to Darth Vader's kids.")
-    print("The Kids are now safe from the Empire's reach.")  
+    
+    print("""
+    Congratulations! You've completed the mission by deleting all tasks related 
+    to Darth Vader's children. The kids are now safe from the Empire's reach.
+    """)
 
 
 

@@ -115,8 +115,8 @@ def tasks():
         return jsonify({'message': 'Task created successfully', 'taskid': taskid}), 201
     
     if request.method == "DELETE":
-        taskID request.args.get("TaskID")
-        if taskID is not None or < 0:
+        taskID = request.args.get("TaskID")
+        if taskID is not None and not taskID < 0:
             db.deleteTask(taskID)
             return jsonify({'message': 'Task deleted successfully'}), 200
         else:
