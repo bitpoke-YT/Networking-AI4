@@ -1,11 +1,13 @@
 
 
-# Mission 5: Advanced Python Scripting for Task Automation 🚀
+# Mission 5.2: Advanced Web Interaction with Python 🚀
+
+This mission builds on the concepts from Mission 2 but dives deeper into advanced Python scripting for web interaction. We'll explore new techniques while maintaining the same style and format as previous missions.
 
 ---
 
-## 📨 Sending PUT Requests  
-The `create_task()` function uses a **PUT request** to create a new task with a custom `dueDate`. PUT is often used to update resources on a server.  
+## 📬 Sending PUT Requests for Task Creation
+PUT requests are commonly used to create or update resources on a server. In our script, we use PUT requests to create new tasks with specific properties.
 
 ### Example:
 ```python
@@ -15,78 +17,91 @@ def create_task(session_id, task_data):
     data = {
         'title': task_data['title'],
         'description': task_data['description'],
-        'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))  # Dynamic timestamp
+        'dueDate': int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))
     }
     response = requests.put(url, headers=headers, json=data, allow_redirects=False)
 ```
-- **`requests.put()`**: Sends a PUT request to update or create a resource.  
-- **`allow_redirects=False`**: Prevents automatic redirection.  
+
+### 🔍 Breakdown:
+1. **URL Endpoint**: The endpoint `/tasks` indicates we're interacting with the tasks resource
+2. **Session Cookie**: We're using a session cookie for authentication, similar to what we learned in Mission 2
+3. **Custom Data**: We're sending:
+   - Title and description from our predefined list
+   - A dynamically generated due date (more on this later)
+
+4. **`requests.put()`**: This sends a PUT request instead of a GET or POST. The difference:
+   - GET: Retrieve data
+   - POST: Submit data to be processed
+   - PUT: Replace an existing resource or create one if it doesn't exist
+
+5. **`allow_redirects=False`**: This prevents automatic following of redirects, giving us more control over the response handling
 
 ---
 
-## 📬 Sending POST Requests with JSON Data  
-The `compleate()` function sends a **POST request** to mark a task as completed.  
+## ⏱️ Dynamic Timestamp Generation
 
-### Example:
+A unique aspect of this script is the dynamic timestamp generation for task due dates.
+
+### Code Snippet:
 ```python
-def compleate(session_id, planet):
-    url = 'http://localhost:4553/tasks?completed=false'
-    headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
-    try:
-        tasks = response.json().get('tasks', [])
-    except Exception:
-        return None
-    for task in tasks:
-        description = task.get('description', '')
-        if any(elem in planet for elem in description.lower()):
-            taskid = task.get('taskid', '')
-            url = 'http://127.0.0.1:4553/task'
-            headers = {'Content-Type': 'application/json'}
-            data = {"taskid": f'{taskid}'}
-            response = requests.post(url, json=data, headers=headers, allow_redirects=False)
+dueDate = int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))
 ```
-- **`requests.post()`**: Sends JSON data to the server.  
-- **`Content-Type: application/json`**: Specifies the payload format.  
+
+### 🔍 Breakdown:
+1. **`time.time()`**: Gets the current timestamp in seconds since epoch (e.g., 1712345678.123456)
+2. **`* 100`**: Converts to a value resembling hundredths of seconds (171234567812)
+3. **`random.randint(0, 400)`**: Generates a random number between 0 and 400 days
+4. **`* 8640000`**: Converts days to milliseconds (86,400 seconds/day × 100 for our hundredths)
+5. **`int()`**: Ensures we have an integer value for the date
+
+### 🧮 Example Calculation:
+If today is 2024-04-05 12:00:00 (timestamp: 1712347200):
+1. `time.time() * 100` = 171234720000
+2. `random.randint(0, 400)` = 137 (randomly chosen)
+3. `137 * 8640000` = 1183680000 (137 days in milliseconds)
+4. Final due date: 171234720000 + 1183680000 = 172418400000 (which is 2024-08-20)
 
 ---
 
-## ⏱️ Using `time` and `random` for Dynamic Timestamps  
-The `create_task()` function generates a timestamp with a random offset (up to 400 days).  
+## 🔍 Case-Insensitive String Matching
 
-### Example:
-```python
-dueDate = int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000))))
-```
-- **`time.time()`**: Gets the current timestamp in seconds.  
-- **`random.randint(0, 400)`**: Adds a random number of days (converted to milliseconds with `8640000`).  
+The script uses case-insensitive matching to find planets in task responses.
 
----
-
-## 🔍 Case-Insensitive String Matching  
-The `check_task()` function checks if a phrase exists in the response text, ignoring case.  
-
-### Example:
+### Code Snippet:
 ```python
 def check_task(session_id, phrase):
     headers = {'Cookie': f'sessionID={session_id}'}
     response = requests.get(url, headers=headers)
     respond = []
     for elem in phrase:
-        if elem in response.text.lower():  # Case-insensitive check
+        if elem in response.text.lower():
             respond.append(elem)
     return respond if respond else None
 ```
-- **`response.text.lower()`**: Converts the entire response to lowercase for comparison.  
+
+### 🔍 Breakdown:
+1. **`response.text`**: Gets the raw text of the response
+2. **`.lower()`**: Converts everything to lowercase for comparison
+3. **Loop Through Phrases**: Checks each phrase in our planets list
+4. **Build Response List**: Only adds phrases that were found
+
+### 🧪 Example:
+If the response contains "Hoth is a frozen planet" and our search list includes "hoth":
+1. Response becomes "hoth is a frozen planet" after lower()
+2. "hoth" is found in the response text
+3. "hoth" is added to the respond list
+
+This is particularly useful when dealing with APIs that might return mixed-case data.
 
 ---
 
-## 🧵 Shared Results in Multithreading  
-The `multThreadedFindTask()` function uses a shared list (`results`) to collect findings from multiple threads.  
+## 🧵 Thread-Safe Result Collection
 
-### Example:
+The script uses multithreading to check multiple IDs simultaneously, and collects results in a shared list.
+
+### Code Snippet:
 ```python
-def multThreadedFindTask(phrase, max_id=1000, batch_size=20, checked=None):
+def multThreadedFindTask(phrase, max_id=1000, batch_size=20, checked = None):
     threads = []
     results = []
     for start in range(1, max_id + 1, batch_size):
@@ -101,54 +116,103 @@ def multThreadedFindTask(phrase, max_id=1000, batch_size=20, checked=None):
         thread.join()
     return results
 ```
-- **Shared `results` list**: Threads append matches to this list.  
-- **`threading.Thread`**: Creates and starts threads for batched ID ranges.  
+
+### 🔍 Breakdown:
+1. **Batched Processing**: The ID range is divided into manageable chunks
+2. **Thread Creation**: Each batch gets its own thread
+3. **Shared Results List**: All threads append to the same list
+4. **Thread Coordination**: `thread.join()` ensures we wait for all threads to finish
 
 ---
 
-## 🚨 Error Handling for Requests  
-The `findTask()` function includes error handling for failed HTTP requests.  
+## 🚨 Error Handling in Network Requests
 
-### Example:
+The script includes robust error handling for network requests.
+
+### Code Snippet:
 ```python
 try:
     response = check_task(id, phrase)
 except requests.exceptions.RequestException as e:
     print(f"Error: {e}")
 ```
-- **`try-except` block**: Catches exceptions like connection errors or timeouts.  
+
+### 🔍 Breakdown:
+1. **`try-except` Block**: Catches any request-related exceptions
+2. **`requests.exceptions.RequestException`**: The base class for all requests exceptions
+   - Includes timeouts, connection errors, HTTP errors, etc.
+3. **Error Reporting**: Provides clear feedback about what went wrong
+
+### 🧠 Best Practice:
+This is an improvement over simple `response.status_code` checks because it handles:
+- Connection errors (server down)
+- Timeouts
+- SSL errors
+- Too many redirects
 
 ---
 
-## 📊 Batched Threaded Requests  
-The script divides ID ranges into batches to avoid overwhelming the server.  
+## 🔄 Nested List Processing in Results
 
-### Example:
+The script processes complex nested data structures in its results.
+
+### Code Snippet:
 ```python
-for start in range(1, max_id + 1, batch_size):
-    end = min(start + batch_size, max_id + 1)
-    thread = threading.Thread(
-        target=findTask,
-        args=(phrase, end, start, results, checked)
-    )
-    threads.append(thread)
-    thread.start()
+for planet in found:
+    for i in planet:
+        if type(i) == type(""):
+            print(i)
+            print(planet[0])
+            compleate(planet[0], i)
+            create_task(planet[0], {
+                'title': random.choice(save),
+                'description': random.choice(save)
+            })
 ```
-- **Batch size**: Controls how many IDs each thread checks.  
+
+### 🔍 Breakdown:
+1. **Outer Loop**: Iterates through each result (each found task)
+2. **Inner Loop**: Iterates through elements of each result
+3. **Type Check**: Identifies string elements (our planet names)
+4. **ID Extraction**: Uses `planet[0]` to get the task ID
+5. **Action Execution**: Completes the task and creates a new one
+
+### 🧪 Example:
+If `found = [[17, "sullust"], [83, "hoth"], [155, "lothal"]]`:
+1. First iteration: `planet = [17, "sullust"]`
+   - `i = 17` → Not a string, skip
+   - `i = "sullust"` → Process task 17
+2. Second iteration: `planet = [83, "hoth"]`
+   - `i = 83` → Not a string, skip
+   - `i = "hoth"` → Process task 83
 
 ---
 
-## 📦 Parsing JSON Responses and Extracting Data  
-The `compleate()` function parses JSON to extract tasks and their descriptions.  
+## 📦 Conditional JSON Parsing with Fallback
 
-### Example:
+The script includes safe handling of JSON responses.
+
+### Code Snippet:
 ```python
 try:
     tasks = response.json().get('tasks', [])
 except Exception:
     return None
-for task in tasks:
-    description = task.get('description', '')
 ```
-- **`response.json()`**: Converts the response to a Python dictionary.  
-- **`get('tasks', [])`**: Safely accesses nested data.  
+
+### 🔍 Breakdown:
+1. **`try` Block**: Attempts to parse JSON and extract the 'tasks' field
+2. **`.get('tasks', [])`**: Safely accesses the 'tasks' key, defaulting to an empty list
+3. **`except` Block**: Catches any exceptions during parsing
+   - Could be invalid JSON
+   - Could be a missing 'tasks' field
+   - Could be a non-JSON response (like HTML error pages)
+
+### 🧠 Best Practice:
+This pattern prevents the script from crashing if:
+- The server returns an error page (HTML instead of JSON)
+- The JSON structure changes unexpectedly
+- The network request fails midway
+
+---
+
