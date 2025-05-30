@@ -27,6 +27,44 @@ def input_with_hints(prompt, timeout, hints):
 
     return input_value
 
+def three_input_with_hints(prompt, timeout, hints):
+    input_value = None
+    is_completed = False
+
+    def target():
+        nonlocal input_value, is_completed
+        try:
+            input_value = threeTriesInput(prompt)
+            is_completed = True
+        except EOFError:
+            # Handle Ctrl+D (Unix) or Ctrl+Z (Windows)
+            is_completed = True
+
+    thread = threading.Thread(target=target)
+    thread.start()
+
+    for hint in hints:
+        thread.join(timeout)
+        if is_completed:
+            break
+        print(hint)
+
+    # Wait indefinitely for the input to complete (after all hints shown)
+    thread.join()
+
+    return input_value
+
+def threeTriesInput(requements):
+    i = 0
+    while i is not 3:
+        put = input()
+        if put.lower == requements.lower():
+            return True
+        else:
+            print("Wrong anwer")
+        i += 1
+    return False
+
 # Example usage
 #hints = [
 #     "Hint 1: Please enter your name.",

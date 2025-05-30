@@ -14,6 +14,17 @@ with open('setup/data.json') as f:
     data = json.load(f)
     tasks = data['tasks']
 
+def threeTriesInput(requements):
+    i = 0
+    while i is not 3:
+        put = input()
+        if put.lower == requements.lower():
+            return True
+        else:
+            print("Wrong anwer")
+        i += 1
+    return False
+
 # Function to generate a random username
 def generate_username(length=10):
     letters_and_digits = string.ascii_lowercase + string.digits
@@ -172,8 +183,7 @@ Your objective: hack into the right account and discover the planet where the Ky
     print("Good luck, and may the Force be with you!")
     input("When you get the information, press Enter...")
     print("On which planet is the Kyber crystal hidden?")
-    Planet = input("Planet: ")
-    if Planet.lower() == random_planet.lower():
+    if threeTriesInput(random_planet):
         print("Good Job you have found the planet where the Kyber crystal is hidden.")
     else:
         print("Incorrect planet. The Kyber crystal remains hidden... for now.")
@@ -185,8 +195,7 @@ Your objective: hack into the right account and discover the planet where the Ky
     input("When you get the information, press Enter...")
     print("What are the coordinates of the Kyber crystal?")
     print("Make sure to incude the square brakes")
-    coordinates = input("Coordinates: ")
-    if coordinates == random_coordinates:
+    if threeTriesInput(random_coordinates):
         print("\nMission Success!\n")
         print(f"You have located the Kyber crystal on {random_planet} at coordinates {random_coordinates}.")
         print("You quickly transmit the coordinates to the Rebel fleet. The strike team is scrambled and bombers are dispatched.")

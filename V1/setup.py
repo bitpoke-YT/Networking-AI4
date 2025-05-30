@@ -14,6 +14,18 @@ with open('setup/data.json') as f:
     data = json.load(f)
     tasks = data['tasks']
 
+def threeTriesInput(requements):
+    i = 0
+    while i is not 3:
+        put = input()
+        if put.lower == requements.lower():
+            return True
+        else:
+            print("Wrong anwer")
+        i += 1
+    return False
+        
+
 # Function to generate a random username
 def generate_username(length=10):
     letters_and_digits = string.ascii_lowercase + string.digits
@@ -103,8 +115,7 @@ input_with_hints("When you get the Planet with the Secret Base press enter...", 
     "Hint: Read the Task Description Carefully."
 ])
 print("What planet is the secret base on?")
-Planet = input("Planet: ")
-if Planet.lower() == random_planet.lower():
+if threeTriesInput(random_planet):
     print("Congratulations! You have successfully completed the mission.")
 else:
     print("Incorrect planet. we will get them next time.")
