@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Investigate rebel supply routes",
+    "description": "Deploy reconnaissance teams to Yavin 4 to investigate suspected rebel supply routes.",
+    "planet": "Yavin 4"
+  },
+  {
+    "title": "Survey hidden rebel bases",
+    "description": "Conduct aerial surveys on Dantooine to locate hidden rebel bases.",
+    "planet": "Dantooine"
+  },
+  {
+    "title": "Intercept rebel communications",
+    "description": "Set up surveillance on Sullust to intercept rebel communications.",
+    "planet": "Sullust"
+  },
+  {
+    "title": "Search for rebel sympathizers",
+    "description": "Investigate underground networks on Coruscant for rebel sympathizers.",
+    "planet": "Coruscant"
+  },
+  {
+    "title": "Monitor rebel movements",
+    "description": "Establish observation posts on Kashyyyk to monitor rebel movements.",
+    "planet": "Kashyyyk"
+  },
+  {
+    "title": "Capture rebel operatives",
+    "description": "Launch a raid on Geonosis to capture known rebel operatives.",
+    "planet": "Geonosis"
+  },
+  {
+    "title": "Infiltrate rebel cell",
+    "description": "Send agents to Ryloth to infiltrate and dismantle a rebel cell.",
+    "planet": "Ryloth"
+  },
+  {
+    "title": "Retrieve stolen Imperial data",
+    "description": "Recover stolen data from a rebel outpost on Mustafar.",
+    "planet": "Mustafar"
+  },
+  {
+    "title": "Destroy rebel outpost",
+    "description": "Eliminate a rebel stronghold discovered on Felucia.",
+    "planet": "Felucia"
+  },
+  {
+    "title": "Track rebel fleet movements",
+    "description": "Deploy Star Destroyers near Eadu to track rebel fleet movements.",
+    "planet": "Eadu"
+  },
+  {
+    "title": "Interrogate captured rebel agents",
+    "description": "Question detained rebels on Lothal for intelligence on rebel leadership.",
+    "planet": "Lothal"
+  },
+  {
+    "title": "Disable rebel sabotage networks",
+    "description": "Root out sabotage cells operating on Cularin.",
+    "planet": "Cularin"
+  },
+  {
+    "title": "Scout rebel asteroid hideouts",
+    "description": "Deploy probe droids to scan asteroid belts near Hoth for rebel hideouts.",
+    "planet": "Hoth"
+  },
+  {
+    "title": "Neutralize rebel propaganda hubs",
+    "description": "Locate and shut down propaganda hubs on Bestine IV.",
+    "planet": "Bestine IV"
+  }
+]

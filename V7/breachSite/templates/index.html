@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebel Alliance - Breached Imperial Accounts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rebel-red { background-color: #db3434; }
+        .rebel-red-text { color: #db3434; }
+        .shadow-sm {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-2xl font-bold mb-2 text-rebel-red">
+                Rebel Alliance Intel
+            </h1>
+            <div class="text-sm text-yellow-400 mb-4">
+                <span class="font-semibold"> Warning:</span>
+                This is sensitive information - handle with care and ensure secure communications.
+            </div>
+            <div class="max-w-2xl mx-auto bg-rebel-red p-3 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    <input type="text" 
+                           id="searchInput" 
+                           class="flex-1 px-4 py-2 bg-gray-800 rounded-l-lg focus:outline-none focus:ring-0 focus:ring-rebel-red"
+                           placeholder="Search breached accounts...">
+                    <button id="searchButton" 
+                            class="px-6 py-2 bg-rebel-red hover:bg-rebel-red/90 text-white rounded-r-lg font-semibold"
+                            onclick="loadBreaches()">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Breach Container -->
+        <div id="breachesContainer" class="space-y-4 mt-8">
+            <div class="text-center text-gray-400 mb-4">
+                Enter a search term to find breached Imperial accounts
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let currentSearch = '';
+
+        function loadBreaches(search = currentSearch, page = currentPage) {
+            if (!search.trim()) {
+                // Clear results if search is empty
+                const breachesContainer = document.getElementById('breachesContainer');
+                breachesContainer.innerHTML = `
+                    <div class="text-center text-gray-400 mb-4">
+                        Enter a search term to find breached Imperial accounts
+                    </div>
+                `;
+                return;
+            }
+
+            fetch(`/api/breaches?search=${encodeURIComponent(search || '')}&page=${page || 1}`)
+                .then(response => response.json())
+                .then(data => {
+                    const breachesContainer = document.getElementById('breachesContainer');
+                    breachesContainer.innerHTML = '';
+
+                    // Display breach information
+                    data.breaches.forEach(breach => {
+                        const breachHTML = `
+                            <div class="bg-gray-800 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-lg font-semibold text-rebel-red">
+                                        Service: ${breach.service_name}
+                                    </h3>
+                                    <span class="text-sm text-yellow-400 relative top-1">
+                                        Status: <span class="font-semibold">Compromised</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="text-gray-300 mb-2">
+                                        Email: ${breach.email}
+                                    </p>
+                                    <span class="text-sm text-rebel-red">
+                                        Risk Level: <span class="font-semibold">${getRiskLevel(breach)}</span>
+                                    </span>
+                                </div>
+                                <p class="text-gray-300 mb-2">
+                                    Password: ${breach.password}
+                                </p>
+                                <div class="mt-2">
+                                    <span class="text-sm text-jade-400 mr-4">
+                                        Breached on: ${breach.paste_date}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                        breachesContainer.innerHTML += breachHTML;
+                    });
+
+                    // Update pagination
+                    currentPage = data.page;
+                    currentSearch = search;
+
+                    // Show pagination controls
+                    if (data.pages > 1 && data.breaches.length > 0) {
+                        const pagination = document.createElement('div');
+                        pagination.className = 'mt-8 flex justify-center space-x-2';
+                        
+                        for (let i = 1; i <= data.pages; i++) {
+                            const button = document.createElement('button');
+                            button.className = `px-4 py-2 rounded ${
+                                i === data.page ? 'bg-rebel-red text-white' : 'bg-gray-700 hover:bg-gray-600'
+                            }`;
+                            button.textContent = i;
+                            button.onclick = () => loadBreaches(search, i);
+                            pagination.appendChild(button);
+                        }
+                        breachesContainer.appendChild(pagination);
+                    }
+                });
+        }
+
+        // Helper function to determine risk level
+        function getRiskLevel(breach) {
+            if (breach.password.length < 8) {
+                return 'High';
+            } else if (breach.password.includes(breach.email.split('@')[0])) {
+                return 'High';
+            } else {
+                return 'Medium';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            const search = document.getElementById('searchInput').value;
+            loadBreaches(search, 1);
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const search = this.value;
+                loadBreaches(search, 1);
+            }
+        });
+    </script>
+</body>
+</html>
