@@ -6,10 +6,10 @@ import random
 
 class database():
     def __init__(self):
-        path = os.path.expanduser('~/Documents/Networking-AI4/V5')
+        path = os.path.expanduser('~/Documents/Networking-AI4/V7')
         if not os.path.exists(path):
             os.makedirs(path)
-        self.__server = sqlite3.connect(f"{path}/Task.db")
+        self.__server = sqlite3.connect(f"{path}/Task.db", timeout=10)
         self.__server.execute('PRAGMA journal_mode=WAL;')  # Enable WAL mode
         self.__server.execute('PRAGMA busy_timeout=5000;') # Wait up to 5 seconds for locks
         self.__setupTable()

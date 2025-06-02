@@ -1,4 +1,5 @@
 import requests
+import webbrowser
 import json
 import random
 import string
@@ -57,14 +58,14 @@ def create_account(username, password):
     data = {'username': username, 'password': password}
     response = requests.post(url, data=data, allow_redirects=False)
     if response.status_code in [201, 200, 302]:
-        return response.cookies['sessionID']
+        return response.cookies['session']
     else:
         return None
 
 # Function to create a new task
 def create_task(session_id, task_data):
     url = 'http://localhost:4553/tasks'
-    headers = {'Cookie': f'sessionID={session_id}'}
+    headers = {'Cookie': f'session={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
     response = requests.put(url, headers=headers, json=data, allow_redirects=False)
     if response.status_code in [201, 200]:
@@ -90,10 +91,12 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-def special_setup_account(num_tasks, task_data, session_list=None):
+def special_setup_account(num_tasks, task_data, session_list=None, password=None, username=None):
     # Generate random username and password
-    username = generate_username()
-    password = generate_password()
+    if username == None:
+        username = generate_username()
+    if password == None:
+        password = generate_password()
 
     session_id = create_account(username, password)
 
@@ -114,9 +117,29 @@ def special_setup_account(num_tasks, task_data, session_list=None):
     else:
         raise Exception(f'Failed to create account for username: {username}')
 
-def check_user(session_id, compleatedlist, newlist):
-    url = 'http://localhost:4553/tasks?completed=false'
-    headers = {'Cookie': f'sessionID={session_id}'}
+def insertBreach(data):
+    # Example breach data
+    # breach_data = {
+    #     "service_name": "Imperial Communications Network",  # Required field
+    #     "email": "darklord777@imperial.mil",              # Required field
+    #     "password": "JedisAreWeak2023!",                  # Required field
+    #     "paste_date": "2023-10-25",                      # Required field
+    #     "risk_level": "High"                             # Optional field
+    # }
+
+    # Send the breach data to the API endpoint
+    response = requests.post(
+        'http://localhost:8980/api/breaches',
+        json=data
+    )
+
+    if not response.status_code == 201:
+        print(f'Error: {response.status_code}')
+#     print(response.text)
+
+def check_all(thrawn, check):
+    url = 'http://localhost:4553/tasks?completed=true'
+    headers = {'Cookie': f'session={thrawn}'}
     response = requests.get(url, headers=headers)
     try:
         tasks = response.json().get('tasks', [])
@@ -124,75 +147,27 @@ def check_user(session_id, compleatedlist, newlist):
         return None
 
     for task in tasks:
-        description = task.get('description', '')
-        if 'kids' in description.lower():
+        title = task.get('title', '')
+        if check.lower() in title.lower():
             return True
-    url = 'http://localhost:4553/tasks?completed=false'
-    headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
     return False
 
-def check_all(rebelbase, other, planets, sessionID):
-    rebelbaseNum = len(rebelbase)
-    otherNum = len(other)
-    planetsNum = len(rebelbase)
-    for id in sessionID:
-        # Check rebel bases
-        url = 'http://127.0.0.1:4553/tasks?completed=true'
-        headers = {'Cookie': f'sessionID={id}'}
-        response = requests.get(url, headers=headers)
-        try:
-            tasks = response.json().get('tasks', [])
-        except Exception:
-            return None
-        for task in tasks:
-            description = task.get('description')
-            if any(elem in description.lower() for elem in rebelbase):
-                rebelbaseNum -= 1
-                # Check replacment
-                url = 'http://localhost:4553/tasks?completed=false'
-                response = requests.get(url, headers=headers)
-                try:
-                    tasks = response.json().get('tasks', [])
-                except Exception:
-                    return None
-                for task in tasks:
-                    description = task.get('description')
-                    if any(elem in description.lower() for elem in planets):
-                        planetsNum -= 1
-        # Check others have not changed
-        url = 'http://localhost:4553/tasks?completed=false'
-        response = requests.get(url, headers=headers)
-        try:
-            tasks = response.json().get('tasks', [])
-            if tasks == []:
-                raise Exception ("NONE")
-        except Exception:
-            return None
-        for task in tasks:
-            description = task.get('description')
-            if any(elem in description.lower() for elem in other):
-                otherNum -= 1
-    
-        time.sleep(0.002)
-
-
-    # Returns 1 if not success or faild
-    # 2 for all success
-    # 3 for first part success
-    # 4 Fail
-    print(otherNum)
-    print(rebelbaseNum)
-    print(planetsNum)
-
-    if not otherNum <= 0:
-        return 4
-    elif (not planetsNum <= 0) and rebelbaseNum <= 0:
-        return 3
-    elif planetsNum <= 0 and rebelbaseNum <= 0:
-        return 2
-    return 1
-
+def getJson():
+    start = 123
+    special = []
+    for i in range(15):
+        special.append(
+            {
+                'title': f'Inspect TF-{start+i}',
+                'description': 'Inspect tie defender factory'
+            }
+        )
+    other = {
+        'title': f'Inspect TF-{start+16}',
+        'description': 'Inspect tie defender factory'
+    }
+    special.append(other)
+    return [special, f"TF-{start+16}"]
 
 
 
@@ -209,100 +184,56 @@ def setup():
         thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
         threads.append(thread)
 
-    with open('setup/rebel.json') as f:
-        data = json.load(f)
+    breach_data = {
+        "service_name": "Advanced Imperial Research Project",  # Required field
+        "email": "grandadmiralthrawn@imperial.mil",              # Required field
+        "password": "emperor'sfavoritegrandAdmiral!",                  # Required field
+        "paste_date": "2023-10-25",                      # Required field
+        "risk_level": "High"                             # Optional field
+    }
 
-    with open('setup/planet.json') as file:
-        planets = json.load(file)
+    threads.append(threading.Thread(target=insertBreach, args=(breach_data,)))
 
-    rebelbase = []
-    other = []
-    sessionID = []
+    task_data = getJson()
+    response = []
 
-    currentTasks = []
+    threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1,3), task_data[0], response, "emperor'sfavoritegrandAdmiral!", "grandadmiralthrawn@imperial.mil")))
 
-    random.shuffle(data)
-
-    for task in data:
-        task_title = task['title']
-        task_description = task['description']
-
-        currentTasks.append({
-                'title': task_title,
-                'description': task_description
-            })
-        
-        if random.random() < 0.35 and len(rebelbase) < len(planets):
-            rebelbase.append(task['planet'])
-        else: 
-            other.append(task['planet'])
-        
-        if random.random() < 0.65:
-            threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 2), currentTasks, sessionID)))
-            currentTasks = []
-
-    random.shuffle(threads)
-
-    # Start all special threads
     for thread in threads:
         thread.start()
-        time.sleep(0.02)  # Optional: slight delay to avoid server overload
-
-    rebelbase = [base.lower() for base in rebelbase]
-    planets = [elem.lower() for elem in planets]
-    other = [elem.lower() for elem in other]
+        time.sleep(random.uniform(0.000, 0.1))
 
     # Wait for all special threads to complete
     for thread in threads:
         thread.join()
+    story(response[0], task_data[1])
 
-    story(rebelbase, other, planets, sessionID)
-
-
-
-def story(rebelbase, other, planets, sessionID):
-    print(len(sessionID))
-    """Mission briefing function for eliminating child-related tasks in the Empire."""
+def story(thrawn, factory):
+    """Mission briefing function for accessing Thrawn's account and completing tasks related to Tie-Defender factories."""
+    webbrowser.open_new('http://localhost:8980')
     print("http://localhost:4553")
     
     print(f"""
-Your mission: Use your access in the Imperial Task Management System to compleate
-task where we have rebel bases. Here is a list of rebel base for you to use. 
-{rebelbase}
-Make sure that you don't remove non rebel bases and add back the task closes to them
-but relating to these planets.
-{planets}
+Your mission: Access the Imperial Task Managemente System to complete task related to the Tie-Defender factoris on Lothal.
+Be cautious—Thrawn is a strong tactician, and any mistake could lead to failure.
+You need to complete the task for {factory} without raising suspicion. 
+To do this, access the Rebel Data Breach site http://localhost:8980, 
+find Thrawn's password, and use it to gain access to his account and complete the task.
+
+Make sure to complete the task carefully and avoid detection.
     """)
     
     input("Press Enter to continue...")
-    print("We have provided the necessary resources in the Mission 5 document.")
+    print("We have provided the necessary resources in the Mission 7 document.")
     print("May the Force be with you!")
     print("We'll notify you upon mission completion.")
 
-    checked = 1
-    while(checked == 1):
-        checked = check_all(rebelbase, other, planets, sessionID)
-        time.sleep(random.uniform(1,5))
-    if checked == 3:
-        print("Well done on compleating thoughs task now make fake ones with the planets we provied.")
-        while(checked == 1 or checked == 3):
-            checked = check_all(rebelbase, other, planets, sessionID)
-            time.sleep(random.uniform(1,5))
-    if checked == 2:
-        print("""
-Well Done on keeping our bases Secret.
-              """)
-        return
-    if checked == 4:
-        print("""
-        Failed! Make sure you only complete the ones where the rebel bases are.
-        """)
-    else:
-        print(checked)
-        print(f""" {checked}
-        Failed! Make sure you only complete the ones where the rebel bases are.
-        """)
+    while not check_all(thrawn, factory):
+        time.sleep(random.uniform(5, 10))
 
+    print("""
+Congratulations! You've completed the mission by completing the task.
+""")
 
 
 

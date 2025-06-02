@@ -2,13 +2,31 @@ import task
 from flask import *
 import database
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 import os
+import secrets
 
 app = Flask(__name__)
 
+
+def generate_secret_key():
+    return secrets.token_hex(32)
+
+# Check if .env file exists
+if not os.path.exists('.env'):
+    # If it doesn't exist, create it and write the secret key
+    with open('.env', 'w') as env_file:
+        secret_key = generate_secret_key()
+        env_file.write(f'FLASK_SECRET_KEY={secret_key}\n')
+    print("Generated new .env file with a random secret key.")
+
+load_dotenv()
+
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
+
 @app.route("/")
 def mainPage():
-    if request.cookies.get('sessionID', 0) == 0:
+    if 'userid' in session:
         return redirect(url_for('tasks'))
     return render_template("home.html")
 
@@ -29,9 +47,8 @@ def register():
         hashed_pw = generate_password_hash(password)
         userid = db.createUser(username, hashed_pw)
         db.close()
-        resp = make_response(redirect(url_for('tasks')))
-        resp.set_cookie('sessionID', f"{userid}")
-        return resp
+        session['userid'] = userid
+        return redirect(url_for('tasks'))
     return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -43,9 +60,8 @@ def login():
         user = db.getUserByUsername(username)
         if user and check_password_hash(user['password'], password):
             db.close()
-            resp = make_response(redirect(url_for('tasks')))
-            resp.set_cookie('sessionID', str(user['userid']))
-            return resp
+            session['userid'] = user['userid']
+            return redirect(url_for('tasks'))
         db.close()
         return make_response(render_template("login.html", error="Invalid credentials."), 401)
     else:
@@ -53,15 +69,14 @@ def login():
 
 @app.route("/logout")
 def logout():
-    resp = make_response(redirect(url_for('mainPage')))
-    resp.set_cookie('userid', '', expires=0)
-    return resp
+    session.pop('userid', None)
+    return redirect(url_for('mainPage'))
 
-@app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/tasks", methods=["GET", "POST", "PUT"])
 def tasks():
-    # if request.cookies.get('sessionID', 0) == 0:
-    #     return redirect(url_for('login'))
-    userid = request.cookies.get('sessionID')
+    if 'userid' not in session:
+        return redirect(url_for('login'))
+    userid = session['userid']
     db = database.database()
     if request.method == "GET":
         completed = request.args.get("completed")
@@ -119,8 +134,8 @@ def tasks():
 
 @app.route("/task", methods=["POST"])
 def taskComplete():
-    # if request.cookies.get('sessionID', 0) == 0:
-    #     return redirect(url_for('login'))
+    if 'userid' not in session:
+        return redirect(url_for('login'))
     if request.method == "POST":
         data = request.get_json()
         if data is None:
