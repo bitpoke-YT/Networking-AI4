@@ -27,14 +27,14 @@ def input_with_hints(prompt, timeout, hints):
 
     return input_value
 
-def three_input_with_hints(prompt, timeout, hints):
+def three_input_with_hints(prompt, check, timeout, hints):
     input_value = None
     is_completed = False
 
     def target():
         nonlocal input_value, is_completed
         try:
-            input_value = threeTriesInput(prompt)
+            input_value = threeTriesInput(check)
             is_completed = True
         except EOFError:
             # Handle Ctrl+D (Unix) or Ctrl+Z (Windows)
@@ -57,12 +57,33 @@ def three_input_with_hints(prompt, timeout, hints):
 def threeTriesInput(requements):
     i = 0
     while i is not 3:
-        put = input()
-        if put.lower == requements.lower():
-            return True
+        if type(requements) is list:
+            for requement in requements:
+                try:
+                    requement = str(requement)
+                    requement = requement.lower()
+                except Exception as x:
+                    print("Could Not conver to string \n" + x)
+                    return False
+                put = input()
+                if put.lower == requement.lower():
+                    return True
+                else:
+                    print("Wrong anwer")
+                i += 1
         else:
-            print("Wrong anwer")
-        i += 1
+            try:
+                requements = str(requements)
+                requements = requements.lower()
+            except Exception as x:
+                print("Could Not conver to string \n" + x)
+                return False
+            put = input()
+            if put.lower == requements.lower():
+                return True
+            else:
+                print("Wrong anwer")
+            i += 1
     return False
 
 # Example usage

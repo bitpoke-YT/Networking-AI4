@@ -128,7 +128,7 @@ def setup():
     task_data = [
         {
             'title': 'Project Star Dust Report',
-            'description': 'Get the report about point defences. there should be at at leset 10 turrets m^2 .'
+            'description': 'Get the report about point defences. there should be at at leset 10 turrets per square meter.'
         }
     ]
 
@@ -163,7 +163,7 @@ Make sure to complete the task carefully and avoid detection.
     input("Press Enter to continue...")
     print("We have provided the necessary resources in the Mission 7 document.")
     print("May the Force be with you!")
-    print("We'll notify you upon mission completion.")
+    amount = three_input_with_hints("How many turrets per square meter", "10", 600, ["",])
 
     while not check_all(thrawn, factory):
         time.sleep(random.uniform(5, 10))
