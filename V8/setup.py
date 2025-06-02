@@ -93,21 +93,6 @@ def special_setup_account(num_tasks, task_data, session_list=None, password=None
             session_list.append(session_id)
     else:
         raise Exception(f'Failed to create account for username: {username}')
-    
-def check_all(thrawn, check):
-    url = 'http://localhost:4553/tasks?completed=true'
-    headers = {'Cookie': f'session={thrawn}'}
-    response = requests.get(url, headers=headers)
-    try:
-        tasks = response.json().get('tasks', [])
-    except Exception:
-        return None
-
-    for task in tasks:
-        title = task.get('title', '')
-        if check.lower() in title.lower():
-            return True
-    return False
 
 
 def setup():
@@ -146,32 +131,23 @@ def setup():
 # UnlimitedPower
 
 def story(thrawn, factory):
-    """Mission briefing function for accessing Thrawn's account and completing tasks related to Tie-Defender factories."""
+    """Mission briefing Access the imperial task management software and get info on Project Stardust."""
     webbrowser.open_new('http://localhost:8980')
     print("http://localhost:4553")
     
     print(f"""
-Your mission: Access the Imperial Task Managemente System to complete task related to the Tie-Defender factoris on Lothal.
-Be cautious—Thrawn is a strong tactician, and any mistake could lead to failure.
-You need to complete the task for {factory} without raising suspicion. 
-To do this, access the Rebel Data Breach site http://localhost:8980, 
-find Thrawn's password, and use it to gain access to his account and complete the task.
-
-Make sure to complete the task carefully and avoid detection.
+Your mission: Access the Imperial Task Managemente System to find info about how many turrets per square meter.
+To do this we have a spy which has gotten the secret key "UnlimitedPower".
+Use this to gain acces and find out this information.
     """)
     
     input("Press Enter to continue...")
-    print("We have provided the necessary resources in the Mission 7 document.")
+    print("We have provided the necessary resources in the Mission 8 document.")
     print("May the Force be with you!")
-    amount = three_input_with_hints("How many turrets per square meter", "10", 600, ["",])
-
-    while not check_all(thrawn, factory):
-        time.sleep(random.uniform(5, 10))
-
-    print("""
-Congratulations! You've completed the mission by completing the task.
-""")
-
+    if(three_input_with_hints("How many turrets per square meter", "10", 600, ["",])):
+        print("Well done, we have more information ")
+    else:
+        print("You will need to get them next time")
 
 
 if __name__ == "__main__":
