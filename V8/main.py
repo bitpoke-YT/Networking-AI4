@@ -8,21 +8,7 @@ import secrets
 
 app = Flask(__name__)
 
-
-def generate_secret_key():
-    return secrets.token_hex(32)
-
-# Check if .env file exists
-if not os.path.exists('.env'):
-    # If it doesn't exist, create it and write the secret key
-    with open('.env', 'w') as env_file:
-        secret_key = generate_secret_key()
-        env_file.write(f'FLASK_SECRET_KEY={secret_key}\n')
-    print("Generated new .env file with a random secret key.")
-
-load_dotenv()
-
-app.secret_key = os.getenv('FLASK_SECRET_KEY')
+app.secret_key = "UnlimitedPower"
 
 @app.route("/")
 def mainPage():
