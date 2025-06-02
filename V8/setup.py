@@ -128,7 +128,7 @@ def setup():
     task_data = [
         {
             'title': 'Project Star Dust Report',
-            'description': 'Inspect tie defender factory'
+            'description': 'Get the report about point defences. there should be at at leset 10 turrets m^2 .'
         }
     ]
 
