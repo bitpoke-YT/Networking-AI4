@@ -8,7 +8,7 @@ import time
 import threading
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from package.hintInput import input_with_hints
+from package.hintInput import three_input_with_hints
 
 # Example
 import requests
