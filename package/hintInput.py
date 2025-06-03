@@ -28,6 +28,7 @@ def input_with_hints(prompt, timeout, hints):
     return input_value
 
 def three_input_with_hints(prompt, check, timeout, hints):
+    print(prompt)
     input_value = None
     is_completed = False
 
@@ -66,7 +67,7 @@ def threeTriesInput(requements):
                     print("Could Not conver to string \n" + x)
                     return False
                 put = input()
-                if put.lower == requement.lower():
+                if put.lower() == requement.lower():
                     return True
                 else:
                     print("Wrong anwer")
@@ -79,7 +80,7 @@ def threeTriesInput(requements):
                 print("Could Not conver to string \n" + x)
                 return False
             put = input()
-            if put.lower == requements.lower():
+            if put.lower() == requements:
                 return True
             else:
                 print("Wrong anwer")

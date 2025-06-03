@@ -34,6 +34,7 @@ def register():
         userid = db.createUser(username, hashed_pw)
         db.close()
         session['userid'] = userid
+        session['logged'] = True
         return redirect(url_for('tasks'))
     return render_template("register.html")
 
@@ -47,6 +48,7 @@ def login():
         if user and check_password_hash(user['password'], password):
             db.close()
             session['userid'] = user['userid']
+            session['username'] = user['username']
             return redirect(url_for('tasks'))
         db.close()
         return make_response(render_template("login.html", error="Invalid credentials."), 401)
@@ -61,6 +63,7 @@ def logout():
 @app.route("/tasks", methods=["GET", "POST", "PUT"])
 def tasks():
     if 'userid' not in session:
+        print(session)
         return redirect(url_for('login'))
     userid = session['userid']
     db = database.database()

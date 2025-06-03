@@ -89,7 +89,7 @@ def special_setup_account(num_tasks, task_data, session_list=None, password=None
                 ...
             else:
                 print(f'Failed to create task: {task_data["title"]}')
-        if session_list is not None:
+        if session_list != None:
             session_list.append(session_id)
     else:
         raise Exception(f'Failed to create account for username: {username}')
@@ -108,16 +108,14 @@ def setup():
         thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
         threads.append(thread)
 
-    response = []
-
     task_data = [
         {
             'title': 'Project Star Dust Report',
             'description': 'Get the report about point defences. there should be at at leset 10 turrets per square meter.'
-        }
+        },
     ]
 
-    threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1,3), task_data[0], response,)))
+    threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1,3), task_data,)))
 
     for thread in threads:
         thread.start()
@@ -126,17 +124,17 @@ def setup():
     # Wait for all special threads to complete
     for thread in threads:
         thread.join()
-    story(response[0], task_data[1])
+    story()
 
 # UnlimitedPower
 
-def story(thrawn, factory):
+def story():
     """Mission briefing Access the imperial task management software and get info on Project Stardust."""
     webbrowser.open_new('http://localhost:8980')
     print("http://localhost:4553")
     
     print(f"""
-Your mission: Access the Imperial Task Managemente System to find info about how many turrets per square meter.
+Your mission: Access the Imperial Task Managemente System to find info Project Star Dust and how many turrets per square meter.
 To do this we have a spy which has gotten the secret key "UnlimitedPower".
 Use this to gain acces and find out this information.
     """)
