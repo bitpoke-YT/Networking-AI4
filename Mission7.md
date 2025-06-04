@@ -1,6 +1,4 @@
-
-
-# Understanding and Preventing the Use of Breached Passwords
+# Mission 7: Understanding and Preventing the Use of Breached Passwords
 
 ## 🚨 What is a Breached Password?
 
