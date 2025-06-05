@@ -38,7 +38,7 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:1111/register'
+    url = 'http://127.0.0.1:5001/register'
     data = {'username': username, 'password': password}
     response = requests.post(url, data=data, allow_redirects=False)
     if response.status_code in [201, 200, 302]:
@@ -48,7 +48,7 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:1111/tasks'
+    url = 'http://localhost:5001/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
     response = requests.put(url, headers=headers, json=data)
@@ -75,47 +75,47 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-try:
-    amount = int(sys.argv[1])
-except:
-    amount = 30
+def Setup():
+    try:
+        amount = int(sys.argv[1])
+    except:
+        amount = 30
+    # Create threads for each account setup
+    threads = []
 
-# Create threads for each account setup
-threads = []
+    for i in range(amount):
+        thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
+        threads.append(thread)
+        thread.start()
+        time.sleep(0.02)  # Slight delay to avoid overwhelming the server
 
-for i in range(amount):
-    thread = threading.Thread(target=setup_account, args=(random.randint(1, 5),))
-    threads.append(thread)
-    thread.start()
-    time.sleep(0.02)  # Slight delay to avoid overwhelming the server
+    # Wait for all threads to complete
+    for thread in threads:
+        thread.join()
 
-# Wait for all threads to complete
-for thread in threads:
-    thread.join()
+    with open('setup/planets.json') as f:
+        data = json.load(f)
 
-with open('setup/planets.json') as f:
-    data = json.load(f)
+    random_data = random.choice(data)
+    random_planet = random_data['plant']
+    random_description = random_data['description']
 
-random_data = random.choice(data)
-random_planet = random_data['plant']
-random_description = random_data['description']
+    create_task(random.randint(1,10), {'title': 'Inspect Secret Base', 'description': random_description})
 
-create_task(random.randint(1,10), {'title': 'Inspect Secret Base', 'description': random_description})
-
-print("http://localhost:1111")
-webbrowser.open_new('http://localhost:1111')
-print("""Your goal is to hack into this task management app used by the Galactic Empire.
-Our sources say that Darth Vader was part of the first 10 users of the app.
-We need you to hack into his account and get the location of a secret base.""")
-input("Press Enter to continue...")
-print("We have provided you with the resources you will need in the Mission 1 document.")
-print("Good luck, and may the Force be with you!")
-input_with_hints("When you get the Planet with the Secret Base press enter...", 15, [
-    "Hint: Try Creating Multiple Acounts.",
-    "Hint: Read the Task Description Carefully."
-])
-print("What planet is the secret base on?")
-if threeTriesInput(random_planet):
-    print("Congratulations! You have successfully completed the mission.")
-else:
-    print("Incorrect planet. we will get them next time.")
+    print("http://127.0.0.1:5001")
+    webbrowser.open_new("http://127.0.0.1:5001")
+    print("""Your goal is to hack into this task management app used by the Galactic Empire.
+    Our sources say that Darth Vader was part of the first 10 users of the app.
+    We need you to hack into his account and get the location of a secret base.""")
+    input("Press Enter to continue...")
+    print("We have provided you with the resources you will need in the Mission 1 document.")
+    print("Good luck, and may the Force be with you!")
+    input_with_hints("When you get the Planet with the Secret Base press enter...", 15, [
+        "Hint: Try Creating Multiple Acounts.",
+        "Hint: Read the Task Description Carefully."
+    ])
+    print("What planet is the secret base on?")
+    if threeTriesInput(random_planet):
+        print("Congratulations! You have successfully completed the mission.")
+    else:
+        print("Incorrect planet. we will get them next time.")

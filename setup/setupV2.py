@@ -37,7 +37,7 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:3333/register'
+    url = 'http://127.0.0.1:5002/register'
     data = {'username': username, 'password': password}
     response = requests.post(url, data=data, allow_redirects=False)
     if response.status_code in [201, 200, 302]:
@@ -47,7 +47,7 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:3333/tasks'
+    url = 'http://127.0.0.1:5002/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
     response = requests.put(url, headers=headers, json=data)
@@ -170,8 +170,8 @@ def setup():
 
 def story(random_planet, random_coordinates):
     import webbrowser
-    print("http://localhost:3333")
-    webbrowser.open_new('http://localhost:3333')
+    print("http://127.0.0.1:5000")
+    webbrowser.open_new('http://127.0.0.1:5000')
     print(
         """Your mission is to hack into this task management app used by the Galactic Empire.
 Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
@@ -231,5 +231,3 @@ Your objective: hack into the right account and discover the planet where the Ky
     else:
         print("Incorrect coordinates. The Kyber crystal remains hidden... for now.")
         return
-
-setup()

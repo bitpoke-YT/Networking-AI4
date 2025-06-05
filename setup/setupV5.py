@@ -9,6 +9,14 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import input_with_hints
 
+domain = "http://172.20.20.15:5000"
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
+
+
 # Load tasks from data.json
 with open('setup/data.json') as f:
     data = json.load(f)
@@ -27,9 +35,9 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:4553/register'
+    url = f'{domain}/register'
     data = {'username': username, 'password': password}
-    response = requests.post(url, data=data, allow_redirects=False)
+    response = requests.post(url, data=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200, 302]:
         return response.cookies['sessionID']
     else:
@@ -37,10 +45,10 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:4553/tasks'
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
-    response = requests.put(url, headers=headers, json=data, allow_redirects=False)
+    response = requests.put(url, headers=headers, json=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200]:
         return True
     else:
@@ -89,9 +97,9 @@ def special_setup_account(num_tasks, task_data, session_list=None):
         raise Exception(f'Failed to create account for username: {username}')
 
 def check_user(session_id, compleatedlist, newlist):
-    url = 'http://localhost:4553/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     try:
         tasks = response.json().get('tasks', [])
     except Exception:
@@ -101,9 +109,9 @@ def check_user(session_id, compleatedlist, newlist):
         description = task.get('description', '')
         if 'kids' in description.lower():
             return True
-    url = 'http://localhost:4553/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     return False
 
 def check_all(rebelbase, other, planets, sessionID):
@@ -112,9 +120,9 @@ def check_all(rebelbase, other, planets, sessionID):
     planetsNum = len(rebelbase)
     for id in sessionID:
         # Check rebel bases
-        url = 'http://127.0.0.1:4553/tasks?completed=true'
+        url = f'{domain}/tasks?completed=true'
         headers = {'Cookie': f'sessionID={id}'}
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, proxies=proxies)
         try:
             tasks = response.json().get('tasks', [])
         except Exception:
@@ -124,8 +132,8 @@ def check_all(rebelbase, other, planets, sessionID):
             if any(elem in description.lower() for elem in rebelbase):
                 rebelbaseNum -= 1
                 # Check replacment
-                url = 'http://localhost:4553/tasks?completed=false'
-                response = requests.get(url, headers=headers)
+                url = f'{domain}/tasks?completed=false'
+                response = requests.get(url, headers=headers, proxies=proxies)
                 try:
                     tasks = response.json().get('tasks', [])
                 except Exception:
@@ -135,8 +143,8 @@ def check_all(rebelbase, other, planets, sessionID):
                     if any(elem in description.lower() for elem in planets):
                         planetsNum -= 1
         # Check others have not changed
-        url = 'http://localhost:4553/tasks?completed=false'
-        response = requests.get(url, headers=headers)
+        url = f'{domain}/tasks?completed=false'
+        response = requests.get(url, headers=headers, proxies=proxies)
         try:
             tasks = response.json().get('tasks', [])
             if tasks == []:
@@ -235,7 +243,8 @@ def setup():
 def story(rebelbase, other, planets, sessionID):
     print(len(sessionID))
     """Mission briefing function for eliminating child-related tasks in the Empire."""
-    print("http://localhost:4553")
+    print("Proxy: http://127.0.0.1:3128")
+    print(domain)
     
     print(f"""
 Your mission: Use your access in the Imperial Task Management System to compleate

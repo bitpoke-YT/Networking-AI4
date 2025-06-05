@@ -9,6 +9,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import input_with_hints
 
+domain = "http://172.20.20.16:5000"
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
+
 # Load tasks from data.json
 with open('setup/data.json') as f:
     data = json.load(f)
@@ -26,9 +33,9 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:4633/register'
+    url = f'{domain}/register'
     data = {'username': username, 'password': password}
-    response = requests.post(url, data=data, allow_redirects=False)
+    response = requests.post(url, data=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200, 302]:
         return response.cookies['sessionID']
     else:
@@ -36,10 +43,10 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:4633/tasks'
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
-    response = requests.put(url, headers=headers, json=data)
+    response = requests.put(url, headers=headers, json=data, proxies=proxies)
     if response.status_code in [201, 200, 302]:
         return True
     else:
@@ -90,9 +97,9 @@ def special_setup_account(num_tasks, task_data, return_session=False, session_li
         raise Exception(f'Failed to create account for username: {username}')
 
 def check_darth_vader(session_id):
-    url = 'http://localhost:4633/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     try:
         tasks = response.json().get('tasks', [])
     except Exception:
@@ -102,9 +109,9 @@ def check_darth_vader(session_id):
         description = task.get('description', '')
         if 'kids' in description.lower():
             return True
-    url = 'http://localhost:4633/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     return False
 
 def setup():
@@ -203,7 +210,8 @@ def setup():
 
 def story(random_planet, darth_vader_session=None, other_session=None):
     """Mission briefing function for eliminating child-related tasks in the Empire."""
-    print("http://localhost:4633")
+    print("Proxy: http://127.0.0.1:3128")
+    print(domain)
     
     print(f"""
 Your mission: Use your access in the Imperial Task Management System to delete 

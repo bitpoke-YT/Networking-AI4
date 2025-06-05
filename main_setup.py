@@ -1,5 +1,5 @@
 import subprocess
-import sys
+import setup.setupV1
 
 def build_images():
     for i in range(1, 9):
@@ -33,4 +33,6 @@ if __name__ == "__main__":
     build_images()
     destroy_clab()
     deploy_clab()
-    print("Done")
+    print("Done Clab")
+    print("Setting up V1")
+    setup.setupV1.Setup()
