@@ -8,7 +8,7 @@ import time
 import threading
 import webbrowser
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from package.hintInput import input_with_hints
+from package.hintInput import three_input_with_hints
 # Load tasks from data.json
 with open('setup/data.json') as f:
     data = json.load(f)
@@ -110,12 +110,11 @@ def Setup():
     input("Press Enter to continue...")
     print("We have provided you with the resources you will need in the Mission 1 document.")
     print("Good luck, and may the Force be with you!")
-    input_with_hints("When you get the Planet with the Secret Base press enter...", 15, [
+    input("When you get the Planet with the Secret Base press enter...")
+    if three_input_with_hints("What planet is the secret base on?", random_planet, 15, [
         "Hint: Try Creating Multiple Acounts.",
         "Hint: Read the Task Description Carefully."
-    ])
-    print("What planet is the secret base on?")
-    if threeTriesInput(random_planet):
+    ]):
         print("Congratulations! You have successfully completed the mission.")
     else:
         print("Incorrect planet. we will get them next time.")
