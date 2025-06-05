@@ -1,7 +1,7 @@
 import requests
 import threading
 
-url = 'http://localhost:3333/tasks'
+url = 'http://127.0.0.1:5002/tasks'
 
 def check_task(session_id, phrase):
     headers = {'Cookie': f'sessionID={session_id}'}
@@ -27,17 +27,17 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
         if response is not None:
             print(f"[Thread {start}-{end-1}] Found phrase in ID: {id}")
             if result_holder is not None:
-                result_holder['result'] = f"Found task with phrase in ID: {id}\n"
-            if stop_event:
-                stop_event.set()
+                result_holder.append(f"Found task with phrase in ID: {id}\n")
+            # if stop_event:
+            #     stop_event.set()
             return
         id += 1
     print(f"[Thread {start}-{end-1}] Finished without finding phrase.")
 
-def multThreadedFindTask(phrase, max_id=500, batch_size=20):
+def multThreadedFindTask(phrase, max_id=1000, batch_size=20):
     threads = []
     stop_event = threading.Event()
-    result_holder = {}
+    result_holder = []
     for start in range(1, max_id + 1, batch_size):
         end = min(start + batch_size, max_id + 1)
         thread = threading.Thread(
@@ -48,7 +48,7 @@ def multThreadedFindTask(phrase, max_id=500, batch_size=20):
         thread.start()
     for thread in threads:
         thread.join()
-    return result_holder.get('result', "Phrase not found in any task.")
+    return result_holder
 
 print("What phrase do you want to search for?")
 phrase = input()

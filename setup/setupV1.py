@@ -75,7 +75,7 @@ def setup_account(num_tasks):
     else:
         print(f'Failed to create account for username: {username}')
 
-def Setup():
+def setup():
     try:
         amount = int(sys.argv[1])
     except:
@@ -118,3 +118,6 @@ def Setup():
         print("Congratulations! You have successfully completed the mission.")
     else:
         print("Incorrect planet. we will get them next time.")
+
+    time.sleep(1)
+    return True

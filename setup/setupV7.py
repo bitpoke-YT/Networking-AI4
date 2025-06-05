@@ -215,7 +215,8 @@ Make sure to complete the task carefully and avoid detection.
     print("""
 Congratulations! You've completed the mission by completing the task.
 """)
-
+    time.sleep(1)
+    return True
 
 
 if __name__ == "__main__":

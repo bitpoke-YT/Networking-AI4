@@ -249,7 +249,9 @@ to Darth Vader's children. The kids are now safe from the Empire's reach.
         print("""
 Failed! Make sure you only delete kid related things in darth vaders account.
 """)
-
+        return
+    time.sleep(1)
+    return True
 
 
 

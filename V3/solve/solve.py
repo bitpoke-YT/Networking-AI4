@@ -33,7 +33,7 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
         if response is not None:
             print(f"[Thread {start}-{end-1}] Found phrase in ID: {id}")
             if result_holder is not None:
-                result_holder['result'] = f"Found task with phrase in ID: {id}\n"
+                result_holder['result'] = f"Found task with phrase in ID: {id}\n {response}"
             if stop_event:
                 stop_event.set()
             return

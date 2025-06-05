@@ -266,7 +266,8 @@ This intel is critical to launching a ground assault on the weapon supply depot 
     print("\n--- Transmission Secure ---")
     print("Your hacking and leadership have delivered a decisive victory for the Rebellion.")
     print("Congratulations! You have successfully completed the mission.")
-
+    time.sleep(1)
+    return True
 
 if __name__ == "__main__":
     setup()

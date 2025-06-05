@@ -7,23 +7,12 @@ import time
 import threading
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from package.hintInput import input_with_hints
+from package.hintInput import threeTriesInput
 
 # Load tasks from data.json
 with open('setup/data.json') as f:
     data = json.load(f)
     tasks = data['tasks']
-
-def threeTriesInput(requements):
-    i = 0
-    while i is not 3:
-        put = input()
-        if put.lower == requements.lower():
-            return True
-        else:
-            print("Wrong anwer")
-        i += 1
-    return False
 
 # Function to generate a random username
 def generate_username(length=10):
@@ -170,8 +159,8 @@ def setup():
 
 def story(random_planet, random_coordinates):
     import webbrowser
-    print("http://127.0.0.1:5000")
-    webbrowser.open_new('http://127.0.0.1:5000')
+    print("http://127.0.0.1:5002")
+    webbrowser.open_new('http://127.0.0.1:5002')
     print(
         """Your mission is to hack into this task management app used by the Galactic Empire.
 Intelligence reports indicate that a hidden Kyber crystal, crucial for the Empire's next superweapon, is being tracked in the app.
@@ -231,3 +220,5 @@ Your objective: hack into the right account and discover the planet where the Ky
     else:
         print("Incorrect coordinates. The Kyber crystal remains hidden... for now.")
         return
+    time.sleep(1)
+    return True

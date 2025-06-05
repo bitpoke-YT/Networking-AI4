@@ -149,6 +149,10 @@ Use this to gain acces and find out this information.
         print("Well done, we have more information ")
     else:
         print("You will need to get them next time")
+        return
+    
+    time.sleep(1)
+    return True
 
 
 if __name__ == "__main__":

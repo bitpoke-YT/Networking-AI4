@@ -150,3 +150,5 @@ Your objective: find out which base has a missing inspection reports."""
         return
     print(f"The stolen reports were related to the base: {random_base}.")
     print("Mission Success! The Rebellion celebrates your success.")
+    time.sleep(1)
+    return True

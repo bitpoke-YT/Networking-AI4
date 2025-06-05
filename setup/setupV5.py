@@ -283,7 +283,8 @@ Well Done on keeping our bases Secret.
         print(f""" {checked}
         Failed! Make sure you only complete the ones where the rebel bases are.
         """)
-
+    time.sleep(1)
+    return True
 
 
 

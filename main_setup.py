@@ -55,8 +55,9 @@ def run_setup(challenge_number):
         os.system('clear')
 
     setup_function = getattr(setup, f"setupV{challenge_number}")
-    setup_function.Setup()
+    results = setup_function.setup()
     print(f"Setup for V{challenge_number} completed.")
+    return results
 
 def menu():
     print("Select an option:")
@@ -72,7 +73,8 @@ def menu():
             print("Invalid challenge number. Please enter a number between 1 and 8.")
     elif choice == "2":
         for i in range(1, 9):
-            run_setup(i)
+            if run_setup(i) != True:
+                return
     else:
         print("Invalid choice. Please enter 1 or 2.")
 
