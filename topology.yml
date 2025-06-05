@@ -1,0 +1,65 @@
+name: networking-AI4
+
+mgmt:
+  network: 172.20.20.0/24
+
+topology:
+  nodes:
+    proxy:
+      kind: linux
+      image: sameersbn/squid:latest
+      mgmt-ipv4: 172.20.20.10
+      ports:
+        - 3128:3128
+      binds:
+        - ./squid.conf:/etc/squid/squid.conf
+
+    server1:
+      kind: linux
+      image: flask-app-v1:latest
+      ports:
+        - 5001:5000
+
+    server2:
+      kind: linux
+      image: flask-app-v2:latest
+      ports:
+        - 5002:5000
+
+    server3:
+      kind: linux
+      image: flask-app-v3:latest
+      mgmt-ipv4: 172.20.20.13
+
+    server4:
+      kind: linux
+      image: flask-app-v4:latest
+      mgmt-ipv4: 172.20.20.14
+
+    server5:
+      kind: linux
+      image: flask-app-v5:latest
+      mgmt-ipv4: 172.20.20.15
+
+    server6:
+      kind: linux
+      image: flask-app-v6:latest
+      mgmt-ipv4: 172.20.20.16
+
+    server7:
+      kind: linux
+      image: flask-app-v7:latest
+      mgmt-ipv4: 172.20.20.17
+
+    server8:
+      kind: linux
+      image: flask-app-v8:latest
+      mgmt-ipv4: 172.20.20.18
+
+  links:
+    - endpoints: ["proxy:eth1", "server3:eth1"]
+    - endpoints: ["proxy:eth2", "server4:eth1"]
+    - endpoints: ["proxy:eth3", "server5:eth1"]
+    - endpoints: ["proxy:eth4", "server6:eth1"]
+    - endpoints: ["proxy:eth5", "server7:eth1"]
+    - endpoints: ["proxy:eth6", "server8:eth1"]
