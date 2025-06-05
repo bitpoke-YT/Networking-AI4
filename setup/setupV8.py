@@ -10,9 +10,12 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import three_input_with_hints
 
-# Example
-import requests
-import json
+domain = "http://172.20.20.17:5000"
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
 
 with open('setup/data.json') as f:
     data = json.load(f)
@@ -31,9 +34,9 @@ def generate_password(length=12):
 
 # Function to create a new account
 def create_account(username, password):
-    url = 'http://localhost:4553/register'
+    url = f'{domain}/register'
     data = {'username': username, 'password': password}
-    response = requests.post(url, data=data, allow_redirects=False)
+    response = requests.post(url, data=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200, 302]:
         return response.cookies['session']
     else:
@@ -41,10 +44,10 @@ def create_account(username, password):
 
 # Function to create a new task
 def create_task(session_id, task_data):
-    url = 'http://localhost:4553/tasks'
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'session={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
-    response = requests.put(url, headers=headers, json=data, allow_redirects=False)
+    response = requests.put(url, headers=headers, json=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200]:
         return True
     else:
@@ -130,8 +133,8 @@ def setup():
 
 def story():
     """Mission briefing Access the imperial task management software and get info on Project Stardust."""
-    webbrowser.open_new('http://localhost:8980')
-    print("http://localhost:4553")
+    print("Proxy: http://127.0.0.1:3128")
+    print(domain)
     
     print(f"""
 Your mission: Access the Imperial Task Managemente System to find info Project Star Dust and how many turrets per square meter.

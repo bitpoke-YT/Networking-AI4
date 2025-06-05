@@ -43,6 +43,15 @@ topology:
       image: flask-app-v5:latest
       mgmt-ipv4: 172.20.20.15
 
+    breach:
+      kind: linux
+      image: breach-app:latest
+      mgmt-ipv4: 172.20.20.19
+      ports:
+        - 8980:8980
+      binds:
+        - ./Breach:/app
+
     server6:
       kind: linux
       image: flask-app-v6:latest
