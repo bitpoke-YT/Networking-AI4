@@ -22,8 +22,6 @@ app.secret_key = app_secret_key
 # Initialize the session interface
 serializer = SecureCookieSessionInterface()
 
-url = 'http://localhost:4553/tasks'
-
 def getCookies(id):
     data = {
         'userid': id,
@@ -43,7 +41,7 @@ def getCookies(id):
     return session_cookie
 
 def check_task_encoded(session_id, phrase):
-    url = 'http://localhost:4553/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
 
     cookie = getCookies(session_id)
 

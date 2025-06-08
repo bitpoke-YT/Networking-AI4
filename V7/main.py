@@ -134,8 +134,6 @@ def tasks():
 
 @app.route("/task", methods=["POST"])
 def taskComplete():
-    if 'userid' not in session:
-        return redirect(url_for('login'))
     if request.method == "POST":
         data = request.get_json()
         if data is None:

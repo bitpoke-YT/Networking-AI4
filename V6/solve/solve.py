@@ -9,6 +9,7 @@ proxies = {
 }
 
 def check_task(session_id, phrase):
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     response = requests.get(url, headers=headers)
     if phrase.lower() in response.text.lower():
@@ -41,7 +42,7 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None, checked 
     print(f"[Thread {start}-{end-1}] Finished without finding phrase.")
 
 def deleteKid(session_id):
-    url = 'http://localhost:4633/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
     response = requests.get(url, headers=headers)
     try:
@@ -53,7 +54,7 @@ def deleteKid(session_id):
         description = task.get('description', '')
         if "kid".lower() in description.lower():
             taskid = task.get('taskid', '')
-            url = f'http://localhost:4633/tasks?taskID={taskid}'
+            url = f'{domain}/tasks?taskID={taskid}'
             response = requests.delete(url, allow_redirects=False)
             if response.status_code == 200:
                 return "Done"

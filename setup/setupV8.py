@@ -10,7 +10,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from package.hintInput import three_input_with_hints
 
-domain = "http://172.20.20.17:5000"
+domain = "http://172.20.20.18:5000"
 
 proxies = {
     "http": "http://127.0.0.1:3128",
@@ -146,7 +146,7 @@ Use this to gain acces and find out this information.
     print("We have provided the necessary resources in the Mission 8 document.")
     print("May the Force be with you!")
     if(three_input_with_hints("How many turrets per square meter", "10", 600, ["",])):
-        print("Well done, we have more information ")
+        print("Well done, Now we have more information about how to destroy it.")
     else:
         print("You will need to get them next time")
         return

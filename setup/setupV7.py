@@ -190,7 +190,7 @@ def setup():
 
 def story(thrawn, factory):
     """Mission briefing function for accessing Thrawn's account and completing tasks related to Tie-Defender factories."""
-    webbrowser.open_new('http://localhost:8980')
+    webbrowser.open_new('http://127.0.0.1:8980')
     print("Proxy: http://127.0.0.1:3128")
     print(domain)
     
@@ -198,7 +198,7 @@ def story(thrawn, factory):
 Your mission: Access the Imperial Task Managemente System to complete task related to the Tie-Defender factoris on Lothal.
 Be cautious—Thrawn is a strong tactician, and any mistake could lead to failure.
 You need to complete the task for {factory} without raising suspicion. 
-To do this, access the Rebel Data Breach site http://localhost:8980, 
+To do this, access the Rebel Data Breach site http://127.0.0.1:8980, 
 find Thrawn's password, and use it to gain access to his account and complete the task.
 
 Make sure to complete the task carefully and avoid detection.
