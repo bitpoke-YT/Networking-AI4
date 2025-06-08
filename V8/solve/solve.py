@@ -7,6 +7,13 @@ import random
 from secrets import token_hex
 from flask import Flask
 
+domain = 'http://172.20.20.18:5000'
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
+
 # Create a minimal Flask application to properly handle sessions
 app = Flask(__name__)
 app_secret_key = 'UnlimitedPower'  # Replace with your actual app's secret key

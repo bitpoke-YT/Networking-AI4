@@ -15,11 +15,6 @@
     "planet": "Sullust"
   },
   {
-    "title": "Search for rebel sympathizers",
-    "description": "Investigate underground networks on Coruscant for rebel sympathizers.",
-    "planet": "Coruscant"
-  },
-  {
     "title": "Monitor rebel movements",
     "description": "Establish observation posts on Kashyyyk to monitor rebel movements.",
     "planet": "Kashyyyk"
@@ -63,10 +58,5 @@
     "title": "Scout rebel asteroid hideouts",
     "description": "Deploy probe droids to scan asteroid belts near Hoth for rebel hideouts.",
     "planet": "Hoth"
-  },
-  {
-    "title": "Neutralize rebel propaganda hubs",
-    "description": "Locate and shut down propaganda hubs on Bestine IV.",
-    "planet": "Bestine IV"
   }
 ]

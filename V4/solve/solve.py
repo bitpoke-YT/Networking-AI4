@@ -4,11 +4,17 @@ import base64
 import time
 import random
 
-url = 'http://localhost:4333/tasks'
+domain = 'http://172.20.20.14:5000'
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
 
 def check_task(session_id, phrase):
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     if phrase.lower() in response.text.lower():
         return response.text
     else:
@@ -22,10 +28,9 @@ def decode_if_base64(s):
         return s
 
 def check_task_encoded(session_id, phrase):
-    import json
-    url = 'http://localhost:4333/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     try:
         tasks = response.json().get('tasks', [])
     except Exception:
@@ -53,7 +58,7 @@ def findTask(phrase, end, start=1, stop_event=None, result_holder=None):
         if response is not None:
             print(f"[Thread {start}-{end-1}] Found phrase in ID: {id}")
             if result_holder is not None:
-                result_holder['result'] = f"Found task with phrase in ID: {id}\n"
+                result_holder['result'] = f"Found task with phrase in ID: {id}\n {response}"
             if stop_event:
                 stop_event.set()
             return

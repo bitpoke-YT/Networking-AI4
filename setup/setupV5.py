@@ -153,9 +153,12 @@ def check_all(rebelbase, other, planets, sessionID):
             return None
         for task in tasks:
             description = task.get('description')
-            if any(elem in description.lower() for elem in other):
+            title = task.get('title')
+            if any(elem.lower() in description.lower() for elem in other):
+                print(description)
                 otherNum -= 1
-    
+            elif any(elem.lower() in title.lower() for elem in other):
+                otherNum -= 1
         time.sleep(0.002)
 
 
@@ -163,9 +166,9 @@ def check_all(rebelbase, other, planets, sessionID):
     # 2 for all success
     # 3 for first part success
     # 4 Fail
-    print(otherNum)
-    print(rebelbaseNum)
-    print(planetsNum)
+    # print(otherNum)
+    # print(rebelbaseNum)
+    # print(planetsNum)
 
     if not otherNum <= 0:
         return 4
@@ -214,11 +217,12 @@ def setup():
         
         if random.random() < 0.35 and len(rebelbase) < len(planets):
             rebelbase.append(task['planet'])
-        else: 
+        elif random.random() < 0.5: 
             other.append(task['planet'])
         
-        if random.random() < 0.65:
-            threads.append(threading.Thread(target=special_setup_account, args=(random.randint(1, 2), currentTasks, sessionID)))
+        
+        if random.random() < 0.65 and currentTasks != []:
+            threads.append(threading.Thread(target=special_setup_account, args=(0, currentTasks, sessionID)))
             currentTasks = []
 
     random.shuffle(threads)
@@ -241,6 +245,9 @@ def setup():
 
 
 def story(rebelbase, other, planets, sessionID):
+    # Debuging 
+    print(other)
+    # 
     print(len(sessionID))
     """Mission briefing function for eliminating child-related tasks in the Empire."""
     print("Proxy: http://127.0.0.1:3128")

@@ -3,11 +3,17 @@ import threading
 import random
 import time
 
-url = 'http://localhost:4553/tasks'
+domain = 'http://172.20.20.15:5000'
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
 
 def check_task(session_id, phrase):
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     respond = []
     for elem in phrase:
         if elem in response.text.lower():
@@ -38,9 +44,9 @@ def findTask(phrase, end, start=1, results=None, checked = None):
     # print(f"[Thread {start}-{end-1}] Finished without finding phrase.")
 
 def compleate(session_id, planet):
-    url = 'http://localhost:4553/tasks?completed=false'
+    url = f'{domain}/tasks?completed=false'
     headers = {'Cookie': f'sessionID={session_id}'}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, proxies=proxies)
     try:
         tasks = response.json().get('tasks', [])
     except Exception:
@@ -50,8 +56,7 @@ def compleate(session_id, planet):
         description = task.get('description', '')
         if any(elem in planet for elem in description.lower()):
             taskid = task.get('taskid', '')
-            url = 'http://127.0.0.1:4553/task'
-            print(taskid)
+            url = f'{domain}/task'
             headers = {
                 'Content-Type': 'application/json'
             }
@@ -63,10 +68,10 @@ def compleate(session_id, planet):
                 return response.text
             
 def create_task(session_id, task_data):
-    url = 'http://localhost:4553/tasks'
+    url = f'{domain}/tasks'
     headers = {'Cookie': f'sessionID={session_id}'}
     data = {'title': task_data['title'], 'description': task_data['description'], 'dueDate': (int((int(time.time() * 100) + ((random.randint(0, 400) * 8640000)))))}
-    response = requests.put(url, headers=headers, json=data, allow_redirects=False)
+    response = requests.put(url, headers=headers, json=data, allow_redirects=False, proxies=proxies)
     if response.status_code in [201, 200]:
         return True
     else:
@@ -75,7 +80,6 @@ def create_task(session_id, task_data):
 
 def multThreadedFindTask(phrase, max_id=1000, batch_size=20, checked = None):
     threads = []
-    stop_event = threading.Event()
     results = []
     for start in range(1, max_id + 1, batch_size):
         end = min(start + batch_size, max_id + 1)
@@ -90,16 +94,20 @@ def multThreadedFindTask(phrase, max_id=1000, batch_size=20, checked = None):
     return results
 
 
-planets = ['eadu', 'sullust', 'hoth', 'lothal']
+planets = ['eadu', 'kashyyyk', 'geonosis']
 planets = [planet.lower() for planet in planets]
 save = ['dagobah', 'utapau', 'malastare', 'nal hutta', 'rodia', 'sorgan', 'umbara', 'dxun', 'onderon', 'wayland', 'bakura', 'corellia', 'bothawui', 'tynna', 'socorro', 'ansion', 'eriadu', 'centares', 'balmorra', 'druckenwell', 'esmara', 'falleen', 'haruun kal', 'talravin', 'talus', 'trammell', 'alzoc iii', 'chandrila', 'concord dawn', 'myrkr', 'bracca', 'agamar', 'trask', 'zonama sekot', 'thyferra', 'mon cala', 'sylvar', 'denon', 'pantora', 'zeffo', 'tund', 'byblos']
 print("What phrase do you want to search for?")
 
+
 found = multThreadedFindTask(planets)
+print(found)
+print(type(found))
 for planet in found:
     for i in planet:
         if type(i) == type(""):
             print(i)
+            print(type(i))
             print(planet[0])
             compleate(planet[0], i)
             

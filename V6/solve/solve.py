@@ -1,7 +1,12 @@
 import requests
 import threading
 
-url = 'http://localhost:4633/tasks'
+domain = 'http://172.20.20.16:5000'
+
+proxies = {
+    "http": "http://127.0.0.1:3128",
+    "https": "http://127.0.0.1:3128",
+}
 
 def check_task(session_id, phrase):
     headers = {'Cookie': f'sessionID={session_id}'}

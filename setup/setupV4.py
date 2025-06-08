@@ -174,7 +174,7 @@ def setup():
         'description': f"Get to {random_planet} and pick up the admiral. Coordinates: {random_coordinates}"
     })))
 
-    with open('setup/Troop.json') as f:
+    with open('setup/troop.json') as f:
         data = json.load(f)
 
     for n in range(1, 30):

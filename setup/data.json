@@ -69,10 +69,6 @@
       "description": "Develop a machine learning algorithm that helps the Sith predict and analyze the behavior of their enemies, from the Jedi to the Rebel Alliance, and inform their strategies to maintain power and control."
     },
     {
-      "title": "Build a Virtual Reality Experience for the Battle of Hoth",
-      "description": "Develop an immersive virtual reality experience that allows users to relive the epic Battle of Hoth, from the icy trenches to the dogfights in the skies, and experience the thrill of combat in a galaxy far, far away."
-    },
-    {
       "id": 1,
       "title": "Optimize Database Query",
       "description": "Improve the performance of the database query to retrieve character information, ensuring it can handle the vast armies of Mordor and the Rebel Alliance alike."
@@ -179,10 +175,6 @@
     {
       "title": "Implement a Machine Learning Algorithm for the Sith",
       "description": "Develop a machine learning algorithm that helps the Sith predict and analyze the behavior of their enemies, from the Jedi to the Rebel Alliance, and inform their strategies to maintain power and control."
-    },
-    {
-      "title": "Build a Virtual Reality Experience for the Battle of Hoth",
-      "description": "Develop an immersive virtual reality experience that allows users to relive the epic Battle of Hoth, from the icy trenches to the dogfights in the skies, and experience the thrill of combat in a galaxy far, far away."
     },
     {
       "title": "Optimize Potato Harvest Algorithm",
