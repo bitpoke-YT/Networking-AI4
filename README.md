@@ -4,52 +4,80 @@ You will be exploiting a security exploit in a misconfigured Flask server. The e
 
 ---
 
-## Versions
+## Challenges
 
-### First Version
+### 1 Challenge
 
 **Skills:**
 - Cookie Editing
-- HTTP Requests
-
-**Tools:**
-- Web browser (Chrome or Firefox based)
 
 ---
 
-### Second Version
+### 2 Challenge
 
 **Skills:**
 - HTTP Requests
 - Python
 
-**Tools:**
+---
+
+### 3 Challenge
+
+**Skills:**
+- HTTP Proxy
 - Python
 
 ---
 
-### Third Version
+### 4 Challenge
 
-Should be unbreakable if you don't have access to the database.
-
-> If you can hack that, it would be amazing!
+**Skills:**
+- Encrytion
+- Python
 
 ---
+
+### 5 Challenge
+
+**Skills:**
+- Analizing HTTP Requests
+- Python
+
+---
+
+### 6 Challenge
+
+**Skills:**
+- Types of HTTP Requests
+- Python
+
+---
+
+### 7 Challenge
+
+**Skills:**
+- Using Breached Data
+- Python
+
+---
+
+### 8 Challenge
+
+**Skills:**
+- itsdangerous signing
+- Python
+
+---
+
+**Tools:**
+- Web browser (Chrome or Firefox based)
+- Python3
+- Pip3
 
 ## Setup
 
-```sh
-./Startup.sh
+To run the Program run 
+
 ```
-
-- First Version: [http://localhost:1111](http://localhost:1111)
-- Second Version: [http://localhost:3333](http://localhost:3333)
-- Third Version: [http://localhost:4444](http://localhost:4444)
-
----
-
-## First Mission
-
-Your goal is to hack into this task management app used by the Galactic Empire. Our sources say that Darth Vader was part of the first 20 users of the app. We need you to hack into his account and get the location of a secret research station.
-
-We have provided you with the resources you will need in the Mission 1 document.
+python3 main_setup.py
+```
